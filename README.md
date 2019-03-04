@@ -25,6 +25,18 @@ You can just choose which scheduler you want to use and write just javascript fu
 
 Usually when i write some react application the base is almost always the same so i've build a library to make this bootstrap step done
 
+# Development
+
+We use lerna for managing multiple project in one project
+If you are doing development you will need to do first
+
+```sh
+npm install
+npx lerna bootstrap
+```
+
+Then you can develop freely in the packages
+
 # Contributions
 
 Contributions are always welcome :)
