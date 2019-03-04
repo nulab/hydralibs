@@ -1,0 +1,17 @@
+{
+  "name": "hydra-dispatch-redux",
+  "description": "Redux support for hydra-dispatch",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "tsc --outDir dist"
+  },
+  "dependencies": {
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "hydra-dispatch": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/redux": "3.6.0",
+    "typescript": "^3.3.0"
+  }
+}

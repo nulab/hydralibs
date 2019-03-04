@@ -1,0 +1,16 @@
+{
+  "name": "hydra-dispatch-react",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "tsc --outDir dist"
+  },
+  "dependencies": {
+    "react": "^16.8.3",
+    "functools-ts": "^0.0.21",
+    "hydra-dispatch": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.5",
+    "typescript": "^3.3.0"
+  }
+}

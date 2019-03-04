@@ -1,0 +1,14 @@
+{
+  "name": "hydra-dispatch",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "tsc --outDir dist"
+  },
+  "dependencies": {
+    "rxjs": "^6.4.0",
+    "functools-ts": "^0.0.21"
+  },
+  "devDependencies": {
+    "typescript": "^3.3.0"
+  }
+}
