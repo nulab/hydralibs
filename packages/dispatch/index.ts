@@ -83,9 +83,13 @@ export const childDispatch = <S, K extends keyof S>(
     })
   })
 
+
+/*
 export const stateTransition = <S>(...transitions: UpdateFn<S>[]) => (
-  dispatch: Dispatch<S>
+  dispatch: Dispatch<S>,
 ): void => {
+  if (transitions.length === 0)
+    return
   const currentTransition = transitions[0]
   dispatch((state: S) => {
     const res = currentTransition(state)
@@ -114,3 +118,5 @@ export const stateTransition = <S>(...transitions: UpdateFn<S>[]) => (
     }
   })
 }
+
+*/

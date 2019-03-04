@@ -2,13 +2,20 @@
   "name": "hydra-dispatch",
   "version": "0.1.0",
   "scripts": {
-    "build": "tsc --outDir dist"
+    "build": "tsc --outDir dist",
+    "test": "NODE_PATH=src:.:node_modules:test TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\", \"esModuleInterop\": true}' mocha --require  ./setup --exit --recursive \"index.test.ts\""
   },
   "dependencies": {
     "rxjs": "^6.4.0",
     "functools-ts": "^0.0.21"
   },
   "devDependencies": {
-    "typescript": "^3.3.0"
+    "typescript": "^3.3.0",
+    "@types/mocha": "5.2.0",
+    "@types/node": "^11.9.5",
+    "@types/expect": "^1.20.3",
+    "mocha": "6.0.2",
+    "expect": "^24.1.0",
+    "ts-mocha": "^6.0.0"
   }
 }

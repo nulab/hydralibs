@@ -32,7 +32,7 @@
     "types": ["node"]
   },
   "include": ["packages/**/*"],
-  "exclude": ["node_modules/**/*"],
+  "exclude": ["node_modules/**/*", "packages/**/*.test.ts"],
   "compileOnSave": false,
   "vscode": {
     "rewriteTsconfig": true
@@ -53,5 +53,6 @@
     "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
     "placeOpenBraceOnNewLineForFunctions": false,
     "placeOpenBraceOnNewLineForControlBlocks": false
-  }
+  },
+  "typeRoots": ["./node_modules/@types"]
 }

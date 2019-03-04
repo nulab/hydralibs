@@ -22,7 +22,7 @@ export type View<State> =
   | ((state: State) => JSX.Element)
   | {new (state: State): ReactComponent<State>}
 
-const shallowEqual = (first: any, second: any, logDiff?: boolean): boolean =>
+export const shallowEqual = (first: any, second: any, logDiff?: boolean): boolean =>
   Object.keys(first).every(key => {
     if (
       (first[key] && isDispatch(first[key])) ||
