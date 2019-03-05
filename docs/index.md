@@ -17,12 +17,6 @@ Go to http://localhost:8008
 
 index.ts
 
-bootstrap will setup the router and HMR if you are on development mode
-Then pass the view to be rendered
-Here we use ReactDOM for rendering but it could a something else
-
-Also we registered some hooks to the application to listen when the application is initialized, when the route change and when an uncaught error happen
-
 ```ts
 import {bootstrap} from "../node_modules/hydra-bootstrap/dist"
 import {State, Root} from "./Root"
@@ -44,14 +38,14 @@ bootstrap(
 )
 ```
 
+bootstrap will setup the router and HMR if you are on development mode
+Then pass the view to be rendered
+Here we use ReactDOM for rendering but it could a something else
+
+Also we registered some hooks to the application to listen when the application is initialized, when the route change and when an uncaught error happen
+
 Root.tsx
 
-Here it's the root component of our application this is where we can start
-writing our application
-
-One thing to notice is that we have a dispatch property in our props
-bootstrap is responsible to give it to the Root component
-dispatch here is different from redux, we don't dispatch action but functions. we will cover a bit later
 ```tsx
 import React from "react"
 import {Dispatch} from "hydra-dispatch"
@@ -73,12 +67,14 @@ export const Root = (props: Props): JSX.Element => (
 )
 ```
 
+Here it's the root component of our application this is where we can start
+writing our application
+
+One thing to notice is that we have a dispatch property in our props
+bootstrap is responsible to give it to the Root component
+dispatch here is different from redux, we don't dispatch action but functions. we will cover a bit later
 
 routes.ts
-
-This is where we declare our routes
-hydra-router provide a nice typed dsl for parsing url into a route object
-For now we only have one route
 
 ```ts
 import {RouteCase, path, noArg} from "hydra-router"
@@ -101,5 +97,9 @@ export const routes: List<RouteCase<Route>> = [
   path(RouteType.Index, "", noArg(Index), () => "")
 ]
 ```
+
+This is where we declare our routes
+hydra-router provide a nice typed dsl for parsing url into a route object
+For now we only have one route
 
 # Counter App
