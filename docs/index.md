@@ -102,4 +102,4 @@ This is where we declare our routes
 hydra-router provide a nice typed dsl for parsing url into a route object
 For now we only have one route
 
-# Counter App
+
