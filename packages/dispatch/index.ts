@@ -1,4 +1,4 @@
-import {F1, Curried} from "functools-ts"
+import {F1, Curried, List} from "functools-ts"
 import {Observable} from "rxjs"
 import {map} from "rxjs/operators"
 
@@ -6,6 +6,7 @@ export type Continuation<S> = S | Promise<F1<S, S>> | Observable<F1<S, S>>
 export type UpdateFn<S> = F1<S, Continuation<S>> & {noReplay?: boolean}
 
 export const DispatchSymbol = Symbol("Dispatch")
+
 export type Dispatch<S> = ((
   update: UpdateFn<S>,
   name?: string,
@@ -26,7 +27,7 @@ export const isObservable = <S>(
   cont: Continuation<S>
 ): cont is Observable<F1<S, S>> => !!(cont as any).subscribe
 
-export const isDispatch = <S>(obj: any): obj is UpdateFn<S> =>
+export const isDispatch = <S>(obj: any): obj is Dispatch<S> =>
   !!obj[DispatchSymbol]
 
 export const nullDispatch = ((_: UpdateFn<any>) => {}) as Dispatch<any>
@@ -80,6 +81,15 @@ export const childDispatch = <S, K extends keyof S>(
     set: s1 => s => ({
       ...s,
       [key]: s1
+    })
+  })
+
+export const childDispatchFromIndex = <S, S1, K extends keyof S>(parentDispatch: Dispatch<S>, key: K, idx: number): Dispatch<S1> =>
+  childDispatchFromLens(parentDispatch, {
+    get: (state) => (state[key] as any)[idx],
+    set: (item) => state => ({
+      ...state,
+      [key]: List.set(state[key] as any, idx, item)
     })
   })
 

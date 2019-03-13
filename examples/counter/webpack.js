@@ -11,9 +11,7 @@ module.exports = {
   mode: "development",
   entry: {
     bundle: [
-      "babel-polyfill",
-      "react-hot-loader/patch",
-      absPath("src/index.ts")
+      absPath("src/index.tsx")
     ]
   },
   resolve: {

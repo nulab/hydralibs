@@ -1,6 +1,8 @@
 {
   "name": "hydra-dispatch",
   "version": "0.1.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --outDir dist",
     "test": "NODE_PATH=src:.:node_modules:test TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\", \"esModuleInterop\": true}' mocha --require  ./setup --exit --recursive \"index.test.ts\""

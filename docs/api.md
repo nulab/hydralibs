@@ -1,50 +1,5 @@
 # API documentation
 
-## hydra-bootstrap
-
-```
-export const bootstrap = <State extends Router.State, Route>(
-  initialState: State,
-  RootView: (state: State & Dispatcher<State>) => JSX.Element,
-  routes: List<RouteCase<Route>>,
-  notFound: Route,
-  module: NodeModule,
-  render: F1<JSX.Element, void>,
-  hooks: Hooks<State, Route> = {},
-  opts: Opts = defaultsOpts
-): void
-```
-bootstrap a react application
-
-### Example
-import {RouteCase, path, noArg} from "hydra-router"
-import {render} from ReactDOM
-
-```tsx
-interface Index {
-  type: "Index"
-}
-const Index: Index = {
-  type: "Index"
-}
-
-type Route = Index
-
-bootstrap(
-  {route: Index},
-  () => <div>Hello world</div>
-  [path("Index", "", noArg(Index), () => ""],
-  Index,
-  module,
-  view => render(view, document.getElementById("root")),
-  {
-    onInit: (state, dispatch, setRoute) => console.log("initialized"),
-    onRouteChanged: (state, dispatch, setRoute) => console.log("route changed"),
-    onError: (state, err, dispatch, setRoute) => console.error(err)
-  }
-)
-```
-
 ## hydra-dispatch
 
 ```ts
@@ -151,5 +106,3 @@ export const updateStateReducer = <S, A extends Action>(state: S, action: A)
 ```
 
 You need to add this reducer in your redux store to get dispatcherFromRedux working 
-
-## hydra-router

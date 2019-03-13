@@ -1,6 +1,8 @@
 {
   "name": "hydra-dispatch-redux",
   "description": "Redux support for hydra-dispatch",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "version": "0.1.0",
   "scripts": {
     "build": "tsc --outDir dist"

@@ -5,20 +5,20 @@ import {isObservable} from "rxjs"
 export type SetStateType = "SetState"
 export const SetStateType: SetStateType = "SetState"
 export interface SetState<S> {
-  name?: string
   noReplay?: boolean
   state: S
-  type: SetStateType
+  kind: SetStateType
+  type: string
 }
 const SetState = <S>(
   state: S,
-  name?: string,
+  type: string = "SetState",
   noReplay?: boolean
 ): SetState<S> => ({
   state,
-  name,
+  kind: SetStateType,
   noReplay,
-  type: SetStateType
+  type
 })
 export type GotErrorType = "GotError"
 export const GotErrorType: GotErrorType = "GotError"
@@ -31,11 +31,14 @@ const GotError = (error: Error): GotError => ({
   type: GotErrorType
 })
 
+export const isSetState = <S>(action: any): action is SetState<S> =>
+  action.kind && action.kind === SetStateType
+
 export const updateStateReducer = <S, A extends Action>(
   state: S,
   action: A
-) => {
-  if (action.type === "SetState") return ((action as any) as SetState<S>).state
+): S => {
+  if (isSetState<S>(action)) return action.state
   return state
 }
 
@@ -62,11 +65,11 @@ const Schedule = <S>(
   }
 }
 
-export const dispatchFromRedux = <S>(
+export const dispatcherFromRedux = <S>(
   reduxDispatch: ReduxDispatch
 ): Dispatch<S> => {
   let dispatch = ((update: UpdateFn<S>, name?: string, noReplay?: boolean) => {
-    const action = Schedule(update, name ? name : "", noReplay ? true : false)
+    const action = Schedule(update, name || update.name || "SetState" , noReplay ? true : false)
     reduxDispatch(action as any)
   }) as Dispatch<S>
   dispatch[DispatchSymbol] = true

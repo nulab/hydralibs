@@ -33,7 +33,7 @@ export const dispatcherFromReact = <S>(
   return dispatch
 }
 
-export const useDispatch = <S>(initialState: S): [S, Dispatch<S>] => {
+export function useDispatch<S>(initialState: S): [S, Dispatch<S>] {
   const [state, setState] = useState(initialState)
   const dispatch = dispatcherFromReact(setState)
   return [state, dispatch]
