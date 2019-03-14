@@ -6,7 +6,6 @@ import {
   DispatchSymbol
 } from "hydra-dispatch"
 import {F1} from "functools-ts"
-import {useState} from "react"
 
 export const dispatcherFromReact = <S>(
   setState: (state: S | F1<S, S>) => void
@@ -33,8 +32,9 @@ export const dispatcherFromReact = <S>(
   return dispatch
 }
 
-export function useDispatch<S>(initialState: S): [S, Dispatch<S>] {
-  const [state, setState] = useState(initialState)
-  const dispatch = dispatcherFromReact(setState)
-  return [state, dispatch]
-}
+// Not working now disabled
+// export function useDispatch<S>(initialState: S): [S, Dispatch<S>] {
+//   const [state, setState] = useState(initialState)
+//   const dispatch = dispatcherFromReact(setState)
+//   return [state, dispatch]
+// }
