@@ -108,5 +108,150 @@ If you want to use redux please continue to read
 First we need to install redux:
 
 ```
-yarn install hydra-dispatch@0.1.0 hydra-dispatch-redux@0.1.0 redux react-redux
+yarn install hydra-dispatch@0.1.0 hydra-dispatch-redux@0.1.0 redux react-redux redux-thunk
 ```
+
+Let's create our models:
+
+todo.ts
+```ts
+export interface Todo {
+  id: number,
+  name: string,
+  created: Date
+}
+
+let curId = 0
+
+const nextId = () => {
+  curId += 1
+  return curId
+}
+
+export const createTodo = (name: string): Todo => ({
+  id: nextId(),
+  name,
+  created: new Date()
+})
+```
+
+Then we need to create our store:
+
+store.ts
+```ts
+import {createStore, compose, Store, applyMiddleware} from "redux"
+import thunk from "redux-thunk"
+import {updateStateReducer} from "hydra-dispatch-redux"
+import {Todo} from "./todo";
+
+export interface Data {
+  todos: Todo[]
+}
+const Data: Data = {
+  todos: []
+}
+
+const composeWithDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ 
+  ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ 
+  : compose
+
+export const store: Store<Data> = createStore(
+  updateStateReducer as any,
+  Data,
+  composeWithDevTools(applyMiddleware(thunk))
+)
+```
+
+index.tsx need to change a little bit
+```tsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+import {store} from './store';
+import {Provider} from "react-redux"
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+  , 
+  document.getElementById('root')
+);
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
+```
+
+Then our App component will change a bit too:
+
+```tsx
+import React, { useState } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import { Data } from './store';
+import {Dispatch} from "hydra-dispatch"
+import {Todo, createTodo} from './todo';
+import { connect } from 'react-redux';
+import { dispatcherFromRedux } from 'hydra-dispatch-redux';
+
+interface Props {
+  todos: Todo[]
+  dispatch: Dispatch<Data>
+}
+
+const addTodo = (name: string) => (state: Data): Data => ({
+  ...state,
+  todos: [createTodo(name), ...state.todos]
+})
+
+const App = (props: Props) => {
+  const [name, setName] = useState("")
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        
+        </a>
+        <input type="text" value={name} onChange={evt => setName(evt.target.value)} />
+        <button disabled={name.length === 0} 
+          onClick={() => {
+            props.dispatch(addTodo(name))
+            setName("")
+          }}
+        >Add</button>
+        <ul>
+          {props.todos.map(todo =>
+            <li key={`todo-${todo.id}`}>{todo.name}</li>
+          )}
+        </ul>
+      </header>
+    </div>
+  );
+}
+
+export default connect(
+  (state: Data) => ({
+    todos: state.todos
+  }),
+  (dispatch) => ({
+    dispatch: dispatcherFromRedux<Data>(dispatch)
+  })
+)(App)
+```
+
+Et voila you had setup a sample application using react, redux and hydra-dispatch-redux
+
