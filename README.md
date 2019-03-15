@@ -1,7 +1,9 @@
 # Introduction
 
-This repository contains a collection of libraries from state management to bootstrapping a react application with HMR and routing easily
+This repository contains a collection of libraries useful when writing
+web application using react
 
+More libraries will be published soon
 
 # Docs
 
