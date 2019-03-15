@@ -1,8 +1,8 @@
 # Introduction
 
-Hydralibs is a suite of library to help you writing your application faster with less boilerplate using react
+Hydralibs is a suite of libraries for writing a web application with less boilerplate using react
 
-hydra-dispatch for example is a library aimed to simplify how we update the state
+At first let's look at hydra-dispatch
 
 If you are familiar with redux then you are familiar with its dispatch function
 hydra-dispatch add the capability of dispatching function
@@ -16,7 +16,7 @@ Dispatch accept three kind of function:
 ```ts
 async (state: State) => Promise<(state: State) => State>
 ```
-The return type of this one can looks weird but it is like that for good reason
+The return type of this one can looks weird but it is designed like that for good reasons.
 When dispatch call the function and when the promise is resolve the state might have changed. 
 Dispatch need to pass you the new state so you can update your state safely
 - Streams
@@ -98,7 +98,7 @@ cd tutorial
 
 Then install hydra-dispatch and hydra-dispatch-react:
 ```
-yarn install hydra-dispatch@0.1.0 hydra-dispatch-react@0.1.0
+yarn add hydra-dispatch@0.1.0 hydra-dispatch-react@0.1.0
 ```
 
 If you only want to use react this is finished and you can use hydra-dispatch in your application
@@ -108,7 +108,7 @@ If you want to use redux please continue to read
 First we need to install redux:
 
 ```
-yarn install hydra-dispatch@0.1.0 hydra-dispatch-redux@0.1.0 redux react-redux redux-thunk
+yarn add hydra-dispatch@0.1.0 hydra-dispatch-redux@0.1.0 redux react-redux redux-thunk
 ```
 
 Let's create our models:
@@ -255,3 +255,12 @@ export default connect(
 
 Et voila you had setup a sample application using react, redux and hydra-dispatch-redux
 
+# Using with monocle-ts
+
+monocle-ts is a very good library for lens
+You probably wondering what lens are
+Lens solve a common problem in functional programming when using nested immutable record.
+Updating a nested property in the record in immutable record is verbose so lens were created to solve this particuliar problem.
+
+i recommend checking out the repository:
+https://github.com/gcanti/monocle-ts

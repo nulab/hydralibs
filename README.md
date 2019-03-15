@@ -5,6 +5,9 @@ web application using react
 
 More libraries will be published soon
 
+- [x] hydra-dispatch
+- [] hydra-component (a styled component library)
+
 # Docs
 
 [Here](https://nulab.github.io/hydralibs/)
