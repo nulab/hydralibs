@@ -1,39 +1,7 @@
 # API documentation
 
+
 ## hydra-dispatch
-
-```ts
-export type Continuation<S> = S | Promise<F1<S,S>> | Observable<F1<S, S>>
-export type UpdateFn<S> = F1<S, Continuation<S>>
-```
-
-```ts
-export type Dispatch<S> = ((
-  update: UpdateFn<S>,
-  name?: string,
-  noReplay?: boolean
-) => void) & {[DispatchSymbol]: boolean}
-```
-
-Note: name and noReplay represent only meta information for development purpose
-
-```ts
-export const isPromise = <S>(cont: Continuation<S>): cont is Promise<F1<S, S>>
-```
-
-```ts
-export const isObservable = <S>(cont: Continuation<S>): cont is Observable<F1<S, S>>
-```
-
-```ts
-export const isDispatch = <S>(obj: any): obj is Dispatch<S>
-```
-
-```ts
-export const nullDispatch: Dispatch<any>
-```
-
-nullDispatch does nothing, it can be used for testing purpose
 
 ```ts
 export const childDispatch = <S, K extends keyof S>(
@@ -73,8 +41,7 @@ export const test = (dispatch: Dispatch<User>) => {
 export const childDispatchFromLens<S, S1>(parentDispatch: Dispatch<S>, getAndSet: GetAndSet<S, S>): Dispatch<S1>
 ```
 
-Same as childDispatch but instead of using a property in the object we use a getter and a setter
-It give you more flexibility about how to get and set a value from S
+Same as childDispatch but instead of using a property in the object we use a getter and a setter. It give you more flexibilty and if you are familiar with lens i recommend using monocle-ts. monocle-ts can generate lens easily
 
 ## hydra-dispatch-react
 
@@ -105,4 +72,4 @@ Redux will only schedule functions here
 export const updateStateReducer = <S, A extends Action>(state: S, action: A)
 ```
 
-You need to add this reducer in your redux store to get dispatcherFromRedux working 
+You will need to add this reducer in your redux store to get dispatcherFromRedux working

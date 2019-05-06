@@ -1,0 +1,33 @@
+{
+  "name": "hydra-styled",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "tsc --outDir dist",
+    "test": "NODE_PATH=src:.:node_modules:test TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\", \"esModuleInterop\": true}' mocha --require  ./setup --exit --recursive \"src/**/*.ts\"" 
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.10",
+    "emotion": "^10.0.9",
+    "fast-equals": "^1.6.1",
+    "fastextend": "^1.0.0",
+    "functools-ts": "^0.0.26",
+    "lodash-es": "^4.17.11",
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
+    "polished": "^1.9.3",
+    "react-html-attributes": "^1.4.3",
+    "react-transition-group": "^2.7.1"
+  },
+  "devDependencies": {
+    "typescript": "^3.3.4000",
+    "@types/react": "^16.8.8",
+    "@types/react-dom": "^16.8.3",
+    "@types/lodash-es": "^4.17.3",
+    "@types/react-transition-group": "^2.0.13",
+    "@types/node": "^11.9.5",
+    "@types/expect": "^1.20.3",
+    "mocha": "6.0.2",
+    "expect": "^24.1.0",
+    "ts-mocha": "^6.0.0"
+  }
+}

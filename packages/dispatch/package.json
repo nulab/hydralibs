@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "rxjs": "^6.4.0",
-    "functools-ts": "^0.0.21"
+    "functools-ts": "^0.0.26"
   },
   "devDependencies": {
     "typescript": "^3.3.0",
