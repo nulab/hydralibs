@@ -101,7 +101,7 @@ export const isProps = (obj: any): obj is {} =>
 
 export const isStyledComponent = <I, O, T extends Tag>(
   styledArg: StyledArg<I, O, T>
-): styledArg is StyledComponent<I> => !!(styledArg as any).__styles
+): styledArg is StyledComponent<I, T> => !!(styledArg as any).__styles
 
 export interface StyledFn {
   <A, T extends Tag = DefaultTag>(a: RootStyledArg<A, T>): StyledComponent<A, T>
