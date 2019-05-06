@@ -8,7 +8,7 @@ import {
   BoxedCSSObject,
   Props as $Props
 } from "./types"
-import React from "react"
+import {Component as ReactComponent, createElement} from "react"
 import {optimize} from "./optimizer"
 import {List, Option, compose} from "functools-ts"
 import merge from "lodash-es/merge"
@@ -36,7 +36,7 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
     tag?: U
   ) => {
     type Props = $Props<P, U>
-    const component = (class ReactStyledComponent2 extends React.Component<
+    const component = (class ReactStyledComponent2 extends ReactComponent<
       Props
     > {
       private className: string
@@ -267,7 +267,7 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
         this.mounted = true
 
         if (this.transitionProps) {
-          const el = React.createElement(
+          const el = createElement(
             this.tag,
             {
               className: this.className,
@@ -276,9 +276,9 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
             },
             this.props.children
           )
-          return React.createElement(CSSTransition, this.transitionProps!, el)
+          return createElement(CSSTransition, this.transitionProps!, el)
         }
-        return React.createElement(
+        return createElement(
           this.tag,
           {
             className: this.className,

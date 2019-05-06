@@ -3,17 +3,17 @@
   "version": "0.1.0",
   "scripts": {
     "build": "tsc --outDir dist",
-    "test": "NODE_PATH=src:.:node_modules:test TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\", \"esModuleInterop\": true}' mocha --require  ./setup --exit --recursive \"src/**/*.ts\"" 
+    "test": "mocha -r ts-node/register/transpile-only -r esm src/*.test.ts"
   },
   "dependencies": {
     "@emotion/core": "^10.0.10",
     "emotion": "^10.0.9",
     "fast-equals": "^1.6.1",
     "fastextend": "^1.0.0",
-    "functools-ts": "^0.0.26",
+    "functools-ts": "^0.1.0",
     "lodash-es": "^4.17.11",
-    "react": "^16.8.5",
-    "react-dom": "^16.8.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "polished": "^1.9.3",
     "react-html-attributes": "^1.4.3",
     "react-transition-group": "^2.7.1"
@@ -21,13 +21,15 @@
   "devDependencies": {
     "typescript": "^3.4.5",
     "@types/react": "^16.8.8",
-    "@types/react-dom": "^16.8.3",
+    "@types/react-dom": "^16.8.4",
     "@types/lodash-es": "^4.17.3",
     "@types/react-transition-group": "^2.0.13",
     "@types/node": "^11.9.5",
-    "@types/expect": "^1.20.3",
-    "mocha": "6.0.2",
-    "expect": "^24.1.0",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "esm": "^3.2.22",
+    "mocha": "^6.1.4",
+    "chai": "^4.2.0",
     "ts-mocha": "^6.0.0"
   }
 }

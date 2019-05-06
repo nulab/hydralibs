@@ -1,5 +1,5 @@
 import {F1} from "functools-ts"
-import expect from "expect"
+import {expect} from "chai"
 import {Dispatch, UpdateFn, DispatchSymbol, isPromise, isObservable, childDispatch} from "./index"
 
 interface State<A> {
@@ -55,15 +55,15 @@ describe("dispatch", () => {
     const dispatch = childDispatch<App, "user">(testDispatch(setState), "user")
     const setName = (name: string) => (_: User): User => ({name})
     dispatch(setName("newname"))
-    expect(state.value.user.name).toEqual("newname")
+    expect(state.value.user.name).eql("newname")
   })
 
   it("should update the state with an async function", () => {
     const [state, setState] = createSetState({user: {name: "test"}})
     const dispatch = childDispatch<App, "user">(testDispatch(setState), "user")
     const setName = (name: string) => async (_: User) =>
-      Promise.resolve((_: User) => ({name}))
+      Promise.resolve((_: User): User => ({name}))
     dispatch(setName("newuser"))
-    setTimeout(() => expect(state.value.user.name).toEqual("newuser"), 0)
+    setTimeout(() => expect(state.value.user.name).eql("newuser"), 0)
   })
 })

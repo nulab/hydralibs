@@ -1,7 +1,7 @@
-import {css, responsive, styled} from "./styled"
-import {computeStyles, numToPx} from "./style"
+import {css, styled} from "./styled"
+import {computeStyles, numToPx, responsive} from "./style"
 import {optimize} from "./optimizer"
-import expect from "expect"
+import {expect} from "chai"
 import border from "./props/border"
 import {FlexProps} from "./components/Flex"
 import overflow, {Overflow} from "./props/overflow"
@@ -14,7 +14,7 @@ const compute = (styles: any[], tagProps: any = {}) => {
 
 describe("core/styled", () => {
   it("handles plain css", () => {
-    expect(compute([css({backgroundColor: "blue"})])).toEqual({
+    expect(compute([css({backgroundColor: "blue"})])).eql({
       backgroundColor: "blue"
     })
   })
@@ -25,7 +25,7 @@ describe("core/styled", () => {
         css({width: "100px"}),
         (_: {}) => css({backgroundColor: "blue"})
       ])
-    ).toEqual({
+    ).eql({
       width: "100px",
       backgroundColor: "blue"
     })
@@ -39,7 +39,7 @@ describe("core/styled", () => {
           bg: "blue"
         }
       ])
-    ).toEqual({
+    ).eql({
       backgroundColor: "blue"
     })
   })
@@ -53,7 +53,7 @@ describe("core/styled", () => {
           col: "red"
         }
       ])
-    ).toEqual({
+    ).eql({
       backgroundColor: "blue"
     })
   })
@@ -68,7 +68,7 @@ describe("core/styled", () => {
         },
         (props: any) => css({color: props.col})
       ])
-    ).toEqual({
+    ).eql({
       backgroundColor: "blue"
     })
   })
@@ -81,7 +81,7 @@ describe("core/styled", () => {
           $hover: {bg: "green"}
         }
       ])
-    ).toEqual({
+    ).eql({
       "&:hover": {backgroundColor: "green"}
     })
   })
@@ -94,7 +94,7 @@ describe("core/styled", () => {
           $hover: {bg: "green", col: "blue"}
         }
       ])
-    ).toEqual({
+    ).eql({
       "&:hover": {backgroundColor: "green", color: "blue"}
     })
   })
@@ -108,7 +108,7 @@ describe("core/styled", () => {
         },
         (props: any) => css({color: props.col})
       ])
-    ).toEqual({
+    ).eql({
       "&:hover": {backgroundColor: "green"}
     })
   })
@@ -121,7 +121,7 @@ describe("core/styled", () => {
           $hover: {$after: {bg: "green"}}
         }
       ])
-    ).toEqual({
+    ).eql({
       "&:hover": {
         "&:after": {backgroundColor: "green"}
       }
@@ -138,7 +138,7 @@ describe("core/styled", () => {
           $hover: {bag: "yellow", $after: {bag: "green"}}
         }
       ])
-    ).toEqual({
+    ).eql({
       backgroundColor: "blue",
       "&:hover": {
         backgroundColor: "yellow",
@@ -154,7 +154,7 @@ describe("core/styled", () => {
         {bg: "green"},
         {bg: "blue"}
       ])
-    ).toEqual({
+    ).eql({
       backgroundColor: "blue"
     })
   })
@@ -170,7 +170,7 @@ describe("core/styled", () => {
           $hover: {$after: {bg: "blue"}}
         }
       ])
-    ).toEqual({
+    ).eql({
       "&:hover": {
         "&:after": {backgroundColor: "blue"}
       }
@@ -200,7 +200,7 @@ describe("core/styled", () => {
           $hover: {radius: 5}
         }
       ])
-    ).toEqual({
+    ).eql({
       borderRadius: "10px",
       "&:hover": {
         borderRadius: "5px",
@@ -236,7 +236,7 @@ describe("core/styled", () => {
       })
     )
     const cssObj = computeStyles(Row.__styles, {scroll: true}, {})
-    expect(cssObj).toEqual({
+    expect(cssObj).eql({
       display: "flex",
       flexDirection: "row",
       flexShrink: 0,
