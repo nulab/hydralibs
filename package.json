@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "./scripts/build.sh",
-    "check": "npm run build && npm run lint",
+    "check": "npm run build && npm run lint && npm test",
     "lint": "tslint -c tslint.json 'examples/counter/src/*.ts' 'packages/bootstrap/src/*.ts' 'packages/dispatch/*.ts' 'packages/dispatch-react/*.ts' 'packages/dispatch-redux/*.ts' 'packages/router/*.ts'",
     "format": "prettier --write \"**/*.{ts*(x),js*(on),scss}\"",
     "test": "./scripts/test.sh"
