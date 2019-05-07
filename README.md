@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/nulab/hydralibs/tree/master.svg?style=svg)](https://circleci.com/gh/nulab/hydralibs/tree/master)
+
 # Introduction
 
 This repository contains a collection of libraries useful when writing
