@@ -1,5 +1,5 @@
-import React from "react"
-import {useDispatch} from "hydra-dispatch-react"
+import React, { useState } from "react"
+import {dispatcherFromReact} from "hydra-dispatch-react"
 
 export interface State {
   counter: number
@@ -14,7 +14,8 @@ const setCounter = (counter: number) => (state: State): State => ({
 })
 
 export const Root = (): JSX.Element => {
-  const [state, dispatch] = useDispatch(State)
+  const [state, setState] = useState(State)
+  const dispatch = dispatcherFromReact(setState)
   return (
     <>
       <button onClick={() => dispatch(setCounter(state.counter - 1))}>-</button>
