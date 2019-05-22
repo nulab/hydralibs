@@ -6,7 +6,25 @@ web application using react
 More libraries will be published soon
 
 - [x] hydra-dispatch
-- [] hydra-component (a styled component library)
+- [x] react and redux support for dispatch
+- [x] hydra-component (a styled component library)
+
+# Install
+
+hydra-dispatch
+```sh
+npm install hydra-dispatch@0.1.0
+```
+
+react support for hydra-dispatch
+```sh
+npm install hydra-dispatch-react@0.1.0
+```
+
+redux support for hydra-dispatch
+```sh
+npm install hydra-dispatch-redux@0.1.0
+```
 
 # Docs
 

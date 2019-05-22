@@ -5,6 +5,7 @@
   "typings": "dist/index.d.ts",
   "version": "0.1.0",
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc --outDir dist"
   },
   "dependencies": {

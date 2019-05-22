@@ -2,6 +2,7 @@
   "name": "hydra-styled",
   "version": "0.1.0",
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc --outDir dist",
     "test": "mocha -r ts-node/register/transpile-only -r esm src/*.test.ts"
   },
