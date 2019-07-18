@@ -11,8 +11,8 @@
     "react-dom": "^16.8.4",
     "react-scripts": "2.1.8",
     "typescript": "3.3.3333",
-    "hydra-dispatch": "0.1.0",
-    "hydra-dispatch-react": "0.1.0"
+    "hydra-dispatch": "0.1.1",
+    "hydra-dispatch-react": "0.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
