@@ -1,5 +1,5 @@
 import * as Css from "csstype"
-import {cssStyle} from "../styled"
+import {cssStyle} from "../style"
 
 export interface Cursor {
   cursor?: Css.Properties["cursor"]

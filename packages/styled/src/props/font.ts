@@ -1,6 +1,7 @@
 import * as Css from "csstype"
-import {numToPx, styled, css} from "../styled"
+import {styled, css} from "../styled"
 import {rem} from "polished"
+import {numToPx} from "../style"
 
 export interface Font {
   fontSize?: number

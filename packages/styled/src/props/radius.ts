@@ -1,5 +1,6 @@
 import * as Css from "csstype"
-import {numToPx, styled, css} from "../styled"
+import {numToPx} from "../style"
+import {styled, css} from "../styled"
 
 type Val = Css.Properties["borderRadius"] | number
 

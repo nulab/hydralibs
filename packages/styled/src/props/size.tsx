@@ -1,5 +1,7 @@
 import * as Css from "csstype"
-import {numToPx, styled, css, OneOrMany, responsive} from "../styled"
+import {numToPx, responsive} from "../style"
+import {styled, css} from "../styled"
+import {OneOrMany} from "../types"
 
 export type Val = Css.Properties["width"] | number
 

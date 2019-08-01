@@ -1,4 +1,4 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src/*.ts", "typings/fastextend.d.ts", "typings/react-html-attributes.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "typings/fastextend.d.ts", "typings/react-html-attributes.d.ts"],
 }

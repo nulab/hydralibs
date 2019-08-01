@@ -1,5 +1,6 @@
 import * as Css from "csstype"
-import {styled, css, numToPx} from "../styled"
+import {styled, css} from "../styled"
+import {numToPx} from "../style"
 
 export type Val = Css.Properties["top"] | number
 

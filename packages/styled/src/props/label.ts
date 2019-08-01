@@ -1,4 +1,4 @@
-import {cssStyle} from "../styled"
+import {cssStyle} from "../style"
 
 export interface Label {
   label?: string

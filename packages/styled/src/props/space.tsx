@@ -1,4 +1,6 @@
-import {numToPx, styled, css, responsive, ListProps} from "../styled"
+import {styled, css} from "../styled"
+import {numToPx, responsive} from "../style"
+import {ListProps} from "../types"
 
 type Val = number | string
 
