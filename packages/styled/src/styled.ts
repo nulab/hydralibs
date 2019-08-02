@@ -8,7 +8,7 @@ import {
   BoxedCSSObject,
   Props as $Props
 } from "./types"
-import {Component as ReactComponent, createElement} from "react"
+import React, {Component as ReactComponent} from "react"
 import {optimize} from "./optimizer"
 import {List, Option, compose} from "functools-ts"
 import merge from "lodash-es/merge"
@@ -22,7 +22,6 @@ import {css as emotionCss} from "emotion"
 import * as HTMLElementAttrs from "react-html-attributes"
 import {CSSTransition} from "react-transition-group"
 import {CSSObject} from "@emotion/core"
-
 
 export const css = BoxedCSSObject
 
@@ -164,6 +163,7 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
       shouldComponentUpdate(nextProps: Props) {
         if (!this.styleDidChange(nextProps)) {
           this.updateStyles(nextProps)
+          return true
         }
         return true
       }
@@ -208,7 +208,9 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
       }
 
       private getTagProps() {
-        const allowedAttrs = HTMLElementAttrs[this.tag] || []
+        const allowedAttrs = HTMLElementAttrs["*"].concat(
+          HTMLElementAttrs[this.tag] || []
+        )
         let tagProps: any = {}
         for (const key in this.props) {
           if (key === "focusable" || key === "autoFocus")
@@ -217,6 +219,7 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
             allowedAttrs.indexOf(key) >= 0 ||
             (key.startsWith("on") && key[2] === key[2].toUpperCase()) ||
             key.startsWith("data-") ||
+            key.startsWith("aria-") ||
             key === "id"
           if (cond) tagProps[key] = (this.props as any)[key]
         }
@@ -224,12 +227,12 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
       }
 
       private onMountHandler(el?: HTMLElement) {
-        if (el) (this.props.onMount! as any)(el)
+        if (el) this.props.onMount!(el)
         return el
       }
 
       private onRenderHandler(el?: HTMLElement) {
-        if (el) (this.props.onRender! as any)(el)
+        if (el) this.props.onRender!(el)
         return el
       }
 
@@ -247,7 +250,18 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
       }
 
       render() {
-        const tagProps = this.getTagProps()
+        const tagPropsWithClassname = this.getTagProps()
+        const suppliedClassName = tagPropsWithClassname.className
+        const tagProps = omit(
+          tagPropsWithClassname,
+          "className",
+          "onMount",
+          "onClickOutside",
+          "onRender"
+        )
+        const className =
+          this.className + (suppliedClassName ? " " + suppliedClassName : "")
+
         const callOnMount = this.props.onMount && !this.mounted
 
         if (
@@ -267,21 +281,21 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
         this.mounted = true
 
         if (this.transitionProps) {
-          const el = createElement(
+          const el = React.createElement(
             this.tag,
             {
-              className: this.className,
+              className,
               style: this.style,
               ...(tagProps as {})
             },
             this.props.children
           )
-          return createElement(CSSTransition, this.transitionProps!, el)
+          return React.createElement(CSSTransition, this.transitionProps!, el)
         }
-        return createElement(
+        return React.createElement(
           this.tag,
           {
-            className: this.className,
+            className,
             style: this.style,
             ...(tagProps as {})
           },
