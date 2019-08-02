@@ -3,7 +3,7 @@
   "description": "Redux support for hydra-dispatch",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "version": "0.1.1",
+  "version": "0.2.3",
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc --outDir dist"

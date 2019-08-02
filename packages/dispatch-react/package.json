@@ -1,6 +1,6 @@
 {
   "name": "hydra-dispatch-react",
-  "version": "0.1.1",
+  "version": "0.2.3",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "react": "^16.8.6",
-    "functools-ts": "^0.1.0",
+    "functools-ts": "^0.2.0",
     "hydra-dispatch": "0.1.1"
   },
   "devDependencies": {
