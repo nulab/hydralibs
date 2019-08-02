@@ -1,6 +1,6 @@
 import {CSSObject} from "@emotion/core"
 import {F1, List} from "functools-ts"
-import {isEmpty} from "lodash-es"
+import isEmpty from "lodash-es/isEmpty"
 
 export type DefaultTag = "div"
 export type CSSInterpolation<T> = BoxedCSSObject | T
@@ -67,7 +67,10 @@ export const isBoxedCss = (obj: any): obj is BoxedCSSObject =>
 
 export type OneOrMany<T> = T | List<T>
 export type ListProps<T> = {[P in keyof T]: OneOrMany<T[P]>}
-export type StyleOf<A extends StyledComponent<{}>> = Partial<A["__styleProps"]>
+export type StyleOf<A extends StyledComponent<{}, any>> = Partial<
+  A["__styleProps"]
+>
+export type PropsOf<A extends StyledComponent<{}, any>> = Partial<A["__props"]>
 
 export type Props<P, T extends Tag = DefaultTag> = WithPseudo<Partial<P>> &
   JSX.IntrinsicElements[T] & {
@@ -82,6 +85,7 @@ export type Props<P, T extends Tag = DefaultTag> = WithPseudo<Partial<P>> &
 
 export interface StyledComponent<P, T extends Tag = DefaultTag> {
   (props: Props<P, T>): JSX.Element
+  __props: Props<P, T>
   __styleProps: P
   __tag: Tag
   __defaults?: Partial<P>
