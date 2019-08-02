@@ -5,7 +5,7 @@ import isEmpty from "lodash-es/isEmpty"
 export type DefaultTag = "div"
 export type CSSInterpolation<T> = BoxedCSSObject | T
 export type Tag = keyof JSX.IntrinsicElements
-export type WithPseudo<P> = P & {[key in PseudoProp]?: Partial<P>}
+export type WithPseudo<P> = P & {[key in PseudoProp]?: Partial<WithPseudo<P>>}
 export type Style<I, O> = F1<I, CSSInterpolation<O>>
 export type StyleArg<I, O> =
   | Style<I, Partial<WithPseudo<O>>>
