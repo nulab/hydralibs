@@ -19,9 +19,20 @@ export interface Dispatcher<S> {
 export type Get<S, S1> = F1<S, S1>
 export type Set<S, S1> = Curried<S1, S, S>
 
+/**
+ * @description test if continuation is a promise
+ * instanceof on promise is not reliable to test if a continuation is a promise
+ * otherwise we test the constructor name and at last resort we test
+ * if the continuation looks like a promise
+ * @param cont 
+ */
 export const isPromise = <S>(
   cont: Continuation<S>
-): cont is Promise<F1<S, S>> => cont instanceof Promise
+): cont is Promise<F1<S, S>> => {
+  const contAny = cont as any
+  return contAny instanceof Promise || (contAny.constructor && contAny.constructor.name === "Promise") ||
+    (typeof contAny.then === "function" && typeof contAny.catch === "function")
+}
 
 export const isObservable = <S>(
   cont: Continuation<S>
