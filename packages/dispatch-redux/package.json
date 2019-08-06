@@ -3,7 +3,7 @@
   "description": "Redux support for hydra-dispatch",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc --outDir dist"
@@ -11,7 +11,7 @@
   "dependencies": {
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "hydra-dispatch": "0.1.1"
+    "hydra-dispatch": "0.2.4"
   },
   "devDependencies": {
     "@types/redux": "3.6.0",
