@@ -24,7 +24,7 @@ export type Set<S, S1> = Curried<S1, S, S>
  * instanceof on promise is not reliable to test if a continuation is a promise
  * otherwise we test the constructor name and at last resort we test
  * if the continuation looks like a promise
- * @param cont 
+ * @param cont
  */
 export const isPromise = <S>(
   cont: Continuation<S>
