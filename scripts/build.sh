@@ -1,9 +1,9 @@
 #!/bin/bash
 
+cp ./tsconfigs/tsconfig.build.json tsconfig.json
+
 cd packages
-
 dirs=`ls`
-
 for dir in $dirs
 do
   echo $dir

@@ -19,7 +19,7 @@
     "emitDecoratorMetadata": true,
     "pretty": true,
     "declaration": true,
-    "module": "es6",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noResolve": false,
     "newLine": "LF",
