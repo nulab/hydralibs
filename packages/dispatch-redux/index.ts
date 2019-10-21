@@ -78,11 +78,11 @@ export const dispatcherFromRedux = <S>(
   reduxDispatch: ReduxDispatch
 ): Dispatch<S> => {
   let tracker = asyncCallTracker()
-  let dispatch = ((update: UpdateFn<S>, opts: DispatchOpts) => {
+  let dispatch = ((update: UpdateFn<S>, opts?: DispatchOpts) => {
     const action = Schedule(update, tracker, {
-      tag: opts.tag || update.tag || "SetState",
-      noReplay: opts.noReplay || update.noReplay || false,
-      takeLatest: opts.takeLatest && opts.tag ? true : false
+      tag: opts && opts.tag || update.tag || "SetState",
+      noReplay: opts && opts.noReplay || update.noReplay || false,
+      takeLatest: opts && opts.takeLatest && opts.tag ? true : false
     })
     reduxDispatch(action as any)
   }) as Dispatch<S>
