@@ -3,22 +3,33 @@ import {
   isPromise,
   isObservable,
   Dispatch,
-  DispatchSymbol
+  DispatchSymbol,
+  DispatchOpts,
+  asyncCallTracker
 } from "hydra-dispatch"
 import {F1} from "functools-ts"
+
 
 export const dispatcherFromReact = <S>(
   setState: (state: S | F1<S, S>) => void
 ): Dispatch<S> => {
+  const tracker = asyncCallTracker()
   let dispatch = ((
     updateFn: UpdateFn<S>,
-    _name?: string,
-    _noReplay?: boolean
+    opts?: DispatchOpts
   ) => {
     setState((state: S) => {
       const ret = updateFn(state)
       if (isPromise(ret)) {
-        ret.then(d => setState((state: S) => d(state)))
+        if (opts && opts.tag && opts.takeLatest) {
+          const timestamp = tracker.record(opts.tag)
+          ret.then(d => {
+            const latestRecorded = tracker.latestTimestampRecorded(opts.tag!)
+            if (latestRecorded === timestamp)
+              setState((state: S) => d(state))
+          })
+        } else
+          ret.then(d => setState((state: S) => d(state)))
         return state
       } else if (isObservable(ret)) {
         ret.subscribe(d => setState((state: S) => d(state)))
@@ -31,6 +42,9 @@ export const dispatcherFromReact = <S>(
   dispatch[DispatchSymbol] = true
   return dispatch
 }
+
+
+// dispatch(takeLatest(fetchData, "FetchData"))
 
 // Not working now disabled
 // export function useDispatch<S>(initialState: S): [S, Dispatch<S>] {
