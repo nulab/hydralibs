@@ -1,6 +1,6 @@
 {
   "name": "hydra-dispatch-react",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
