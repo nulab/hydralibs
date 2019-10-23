@@ -11,7 +11,7 @@
   "dependencies": {
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "hydra-dispatch": "0.2.7"
+    "hydra-dispatch": "0.2.8"
   },
   "devDependencies": {
     "@types/redux": "3.6.0",
