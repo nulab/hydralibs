@@ -15,17 +15,21 @@ More libraries will be published soon
 
 hydra-dispatch
 ```sh
-npm install hydra-dispatch@0.1.0
+npm install hydra-dispatch@0.2.8
 ```
 
 react support for hydra-dispatch
 ```sh
-npm install hydra-dispatch-react@0.1.0
+npm install hydra-dispatch-react@0.2.8
 ```
 
 redux support for hydra-dispatch
 ```sh
-npm install hydra-dispatch-redux@0.1.0
+npm install hydra-dispatch-redux@0.2.8
+```
+styled component library
+```sh
+npm install hydra-styled@0.2.8
 ```
 
 # Docs
