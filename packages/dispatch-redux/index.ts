@@ -1,4 +1,4 @@
-import {UpdateFn, isPromise, Dispatch, DispatchSymbol} from "hydra-dispatch"
+import {UpdateFn, isPromise, Dispatch, DispatchSymbol, DispatchOpts, AsyncCallTracker, asyncCallTracker} from "hydra-dispatch"
 import {Action, Dispatch as ReduxDispatch} from "redux"
 import {isObservable} from "rxjs"
 
@@ -44,22 +44,31 @@ export const updateStateReducer = <S, A extends Action>(
 
 const Schedule = <S>(
   update: UpdateFn<S>,
-  name?: string,
-  noReplay?: boolean
+  tracker: AsyncCallTracker,
+  opts: DispatchOpts
 ) => (dispatch: ReduxDispatch, getState: () => S) => {
   const state = getState()
   try {
     const cont = update(state)
     if (isPromise(cont)) {
-      cont
-        .then(pupdate => dispatch(Schedule(pupdate, name, noReplay) as any))
-        .catch(err => dispatch(GotError(err)))
+      if (opts.tag && opts.takeLatest) {
+        const timestamp = tracker.record(opts.tag)
+        cont.then(pupdate => {
+          const latestRecorded = tracker.latestTimestampRecorded(opts.tag!)
+          if (latestRecorded === timestamp)
+            dispatch(Schedule(pupdate, tracker, opts) as any)
+        })
+      } else {
+        cont
+          .then(pupdate => dispatch(Schedule(pupdate, tracker, opts) as any))
+          .catch(err => dispatch(GotError(err)))
+      }
     } else if (isObservable(cont)) {
       cont.subscribe(
-        pupdate => dispatch(Schedule(pupdate, name, noReplay) as any),
+        pupdate => dispatch(Schedule(pupdate, tracker, opts) as any),
         err => dispatch(GotError(err))
       )
-    } else dispatch(SetState(cont, name, noReplay))
+    } else dispatch(SetState(cont, opts.tag, opts.noReplay))
   } catch (err) {
     dispatch(GotError(err))
   }
@@ -68,8 +77,13 @@ const Schedule = <S>(
 export const dispatcherFromRedux = <S>(
   reduxDispatch: ReduxDispatch
 ): Dispatch<S> => {
-  let dispatch = ((update: UpdateFn<S>, name?: string, noReplay?: boolean) => {
-    const action = Schedule(update, name || update.name || "SetState" , noReplay ? true : false)
+  let tracker = asyncCallTracker()
+  let dispatch = ((update: UpdateFn<S>, opts?: DispatchOpts) => {
+    const action = Schedule(update, tracker, {
+      tag: opts && opts.tag || update.tag || "SetState",
+      noReplay: opts && opts.noReplay || update.noReplay || false,
+      takeLatest: opts && opts.takeLatest && opts.tag ? true : false
+    })
     reduxDispatch(action as any)
   }) as Dispatch<S>
   dispatch[DispatchSymbol] = true

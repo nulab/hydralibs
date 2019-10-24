@@ -1,16 +1,21 @@
-import {F1, Curried, List} from "functools-ts"
+import {F1, Curried, List, Option} from "functools-ts"
 import {Observable} from "rxjs"
 import {map} from "rxjs/operators"
 
+export type DispatchOpts = {
+  tag?: string,
+  noReplay?: boolean,
+  takeLatest?: boolean
+}
+
 export type Continuation<S> = S | Promise<F1<S, S>> | Observable<F1<S, S>>
-export type UpdateFn<S> = F1<S, Continuation<S>> & {noReplay?: boolean}
+export type UpdateFn<S> = F1<S, Continuation<S>> & DispatchOpts
 
 export const DispatchSymbol = Symbol("Dispatch")
 
 export type Dispatch<S> = ((
   update: UpdateFn<S>,
-  name?: string,
-  noReplay?: boolean
+  opts?: DispatchOpts
 ) => void) & {[DispatchSymbol]: boolean}
 
 export interface Dispatcher<S> {
@@ -18,6 +23,12 @@ export interface Dispatcher<S> {
 }
 export type Get<S, S1> = F1<S, S1>
 export type Set<S, S1> = Curried<S1, S, S>
+
+type AsyncCalls = {[key: string]: number}
+export interface AsyncCallTracker {
+  latestTimestampRecorded(name: string): number
+  record(name: string): number
+}
 
 /**
  * @description test if continuation is a promise
@@ -55,8 +66,7 @@ export const childDispatchFromLens = <S, S1>(
 ): Dispatch<S1> => {
   let dispatch = (((
     update: UpdateFn<S1>,
-    name?: string,
-    noReplay?: boolean
+    opts?: DispatchOpts
   ) => {
     parentDispatch(
       state => {
@@ -75,8 +85,11 @@ export const childDispatchFromLens = <S, S1>(
         }
         return lens.set(cont)(state)
       },
-      name ? name : update.name,
-      noReplay ? noReplay : update.noReplay
+      {
+        tag: opts && opts.tag ? opts.tag : update.tag,
+        noReplay: opts && opts.noReplay ? opts.noReplay : update.noReplay,
+        takeLatest: opts && opts.takeLatest && opts.tag ? opts.takeLatest : update.takeLatest
+      }
     )
   }) as any) as Dispatch<S1>
   dispatch[DispatchSymbol] = true
@@ -105,39 +118,34 @@ export const childDispatchFromIndex = <S, S1, K extends keyof S>(parentDispatch:
   })
 
 
-/*
-export const stateTransition = <S>(...transitions: UpdateFn<S>[]) => (
-  dispatch: Dispatch<S>,
-): void => {
-  if (transitions.length === 0)
-    return
-  const currentTransition = transitions[0]
-  dispatch((state: S) => {
-    const res = currentTransition(state)
-    if (isPromise(res)) {
-      res
-        .then(nextState => {
-          dispatch(nextState)
-          stateTransition(...transitions.slice(1))(dispatch)
-        })
-        .catch(err => {
-          throw err
-        })
-      return state
-    } else if (isObservable(res)) {
-      res.subscribe({
-        next: nextState => dispatch(nextState),
-        complete: () => stateTransition(...transitions.slice(1))(dispatch),
-        error: error => {
-          throw error
-        }
-      })
-      return state
-    } else {
-      stateTransition(...transitions.slice(1))(dispatch)
-      return res
+
+export const asyncCallTracker = (): AsyncCallTracker => {
+  let asyncCalls: AsyncCalls = {}
+  return {
+    latestTimestampRecorded(name: string): number {
+      if (Option.isEmpty(asyncCalls[name]))
+        throw new Error(`No async call found for name: ${name} this is probably a bug in dispatch-react`)
+      return asyncCalls[name]
+    },
+    record(name: string): number {
+      asyncCalls[name] = Date.now()
+      return asyncCalls[name]
     }
-  })
+  }
 }
 
-*/
+export const takeLatest = <S>(update: UpdateFn<S>, name: string): UpdateFn<S> => {
+  update.tag = name
+  update.takeLatest = update.takeLatest
+  return update
+}
+
+export const disableReplay = <S>(update: UpdateFn<S>): UpdateFn<S> => {
+  update.noReplay = false
+  return update
+}
+
+export const tag = <S>(update: UpdateFn<S>, name: string): UpdateFn<S> => {
+  update.tag = name
+  return update
+}
