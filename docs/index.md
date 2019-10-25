@@ -255,6 +255,50 @@ export default connect(
 
 Et voila you had setup a sample application using react, redux and hydra-dispatch-redux
 
+# What about race condition with async function ?
+
+In the version 0.2.8 we introduce a new annotation for function being dispatched so you can tell to dispatch that you are only interested to apply with the latest async function resolved.
+
+Example:
+```tsx
+interface User {
+  id: number
+  name: string
+}
+
+interface State {
+  readonly users: User[]
+}
+const State: State = {
+  users: []
+}
+
+const sleep = (time: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, time))
+
+const fetchUsers = (from: number, limit: number) => async (state: State) => {
+  await sleep(1000)
+  return (state: State) => ({
+    users: [{id: 1, name: "John"}]
+  })
+}
+
+const UserList = () => {
+  const [state, setState] = useState(State)
+  const dispatch = dispatcherFromReact(setState)
+  
+  return (
+    <>
+      <ul>
+        {state.users.map(user => <li>{user.name}</li>)}
+      </ul>
+      <button onClick={() => dispatch(takeLatest(fetchUsers(0, 10)), "fetchUsers")}></button>
+    </>
+  )
+}
+
+```
+
 # Using with monocle-ts
 
 monocle-ts is a very good library for lens
