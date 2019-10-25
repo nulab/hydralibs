@@ -136,7 +136,7 @@ export const asyncCallTracker = (): AsyncCallTracker => {
 
 export const takeLatest = <S>(update: UpdateFn<S>, name: string): UpdateFn<S> => {
   update.tag = name
-  update.takeLatest = update.takeLatest
+  update.takeLatest = true
   return update
 }
 
