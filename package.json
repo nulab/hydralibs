@@ -1,6 +1,6 @@
 {
   "name": "hydralibs",
-  "version": "0.1.1",
+  "version": "0.2.10",
   "scripts": {
     "build": "./scripts/build.sh",
     "check": "npm run build && npm run lint && npm test",
