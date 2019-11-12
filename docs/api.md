@@ -43,6 +43,25 @@ export const childDispatchFromLens<S, S1>(parentDispatch: Dispatch<S>, getAndSet
 
 Same as childDispatch but instead of using a property in the object we use a getter and a setter. It give you more flexibilty and if you are familiar with lens i recommend using monocle-ts. monocle-ts can generate lens easily
 
+
+```ts
+export const takeLatest = (update: Update<S>, name: string): Update<S>
+```
+
+Set takeLatest and tag to the function to communicate to the dispatcher that we are interest only in the latest asynchronous update
+
+```ts
+export const tag = (update: Update<S>, name: string): Update<S>
+```
+
+Set a tag to function, useful for debugging purpose if you use for example redux dev tools
+
+```ts
+export const transitions = (...updates: Update<S>[]): Transitions<S>
+```
+
+convert a list of updates to a state transition
+
 ## hydra-dispatch-react
 
 ```ts
@@ -73,3 +92,4 @@ export const updateStateReducer = <S, A extends Action>(state: S, action: A)
 ```
 
 You will need to add this reducer in your redux store to get dispatcherFromRedux working
+
