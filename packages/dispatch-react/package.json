@@ -1,19 +1,28 @@
 {
   "name": "hydra-dispatch-react",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsc --outDir dist"
+    "build": "tsc --outDir dist",
+    "test": "mocha -r ts-node/register/transpile-only -r esm index.test.ts"
   },
   "dependencies": {
     "react": "^16.8.6",
     "functools-ts": "^0.2.0",
-    "hydra-dispatch": "0.2.9"
+    "hydra-dispatch": "0.2.10",
+    "rxjs": "^6.5.3"
   },
   "devDependencies": {
     "@types/react": "^16.8.5",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "@types/mocha": "5.2.0",
+    "@types/node": "^11.9.5",
+    "@types/chai": "^4.1.7",
+    "mocha": "6.1.4",
+    "chai": "^4.2.0",
+    "esm": "^3.2.25",
+    "ts-mocha": "^6.0.0"
   }
 }

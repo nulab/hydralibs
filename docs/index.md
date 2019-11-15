@@ -87,7 +87,7 @@ export const Root = () => {
 ```
 For more information please look at API docs
 
-# Setup an application created with create-react-app cli
+## Setup an application created with create-react-app cli
 
 At first let's create a new project:
 
@@ -255,7 +255,7 @@ export default connect(
 
 Et voila you had setup a sample application using react, redux and hydra-dispatch-redux
 
-# What about race condition with async function ?
+## What about race condition with async function ?
 
 In the version 0.2.8 we introduce a new annotation for function being dispatched so you can tell to dispatch that you are only interested to apply with the latest async function resolved.
 
@@ -297,7 +297,65 @@ const UserList = () => {
   )
 }
 
+# 
+
 ```
+
+## Using transition (Experimental)
+
+State transition solve a common problem when you want to describe your update step by step. For example when you start loading data, you would like to set first the data to loading then fetch the data. This is now possible without requiring to call dispatch twice.
+
+```typescript
+
+import {createStore, compose, Store, applyMiddleware} from "redux"
+import thunk from "redux-thunk"
+import {updateStateReducer, dispatcherFromRedux} from "./index"
+import { transitions } from "hydra-dispatch";
+
+interface Book {
+  id: number
+  name: string,
+  description: string
+}
+const Book = (id: number, name: string, description: string = ""): Book => ({
+  id,
+  name,
+  description
+})
+
+interface State {
+  books: ReadonlyArray<Book>
+  loading: boolean
+}
+const State: State = {
+  books: [],
+  loading: false
+}
+
+const setLoading = (state: State) => ({
+  ...state,
+  loading: true
+})
+
+const fetchBooks = async (_: State) => {
+  const books = [Book(1, "test")]
+  return Promise.resolve((state: State) => ({loading: false, books}))
+}
+
+const store = createStore(
+    updateStateReducer as any,
+    initialState,
+    compose(applyMiddleware(thunk))
+  ) as any
+
+const dispatch = dispatcherFromRedux(store.dispatch)
+dispatch(transitions(setLoading, fetchBooks))
+
+store.subscribe(() => console.log(store.getState()))
+
+```
+
+This currently works with synchronous function, asynchronous and finite stream.
 
 # Using with monocle-ts
 
@@ -306,5 +364,8 @@ You probably wondering what lens are
 Lens solve a common problem in functional programming when using nested immutable record.
 Updating a nested property in the record in immutable record is verbose so lens were created to solve this particuliar problem.
 
-i recommend checking out the repository:
+I recommend checking out the repository:
 https://github.com/gcanti/monocle-ts
+
+
+

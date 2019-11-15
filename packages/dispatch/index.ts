@@ -9,12 +9,31 @@ export type DispatchOpts = {
 }
 
 export type Continuation<S> = S | Promise<F1<S, S>> | Observable<F1<S, S>>
-export type UpdateFn<S> = F1<S, Continuation<S>> & DispatchOpts
+export type UpdateFn<S> = F1<S, Continuation<S>>
+export type Transitions<S> = List<UpdateFn<S>>
+export type Update<S> = (UpdateFn<S> | Transitions<S>) & DispatchOpts
+
+export const defer = (f: () => void): Promise<void> =>
+  new Promise((resolve, reject) => setTimeout(() => {
+      try {
+        f()
+        resolve()
+      } catch (ex) {
+        reject(ex)
+      }
+    }
+  ))
+
+/*
+ * dispatch(transitions(,,,,,,,,,,,,,,,,))
+ *
+ *
+ */
 
 export const DispatchSymbol = Symbol("Dispatch")
 
 export type Dispatch<S> = ((
-  update: UpdateFn<S>,
+  update: Update<S>,
   opts?: DispatchOpts
 ) => void) & {[DispatchSymbol]: boolean}
 
@@ -60,37 +79,49 @@ export interface GetAndSet<S, S1> {
   set: Set<S, S1>
 }
 
+export const isTransitions = <S>(update: Update<S>): update is Transitions<S> =>
+  update instanceof Array
+
+const mapUpdateTo = <S, S1>(lens: GetAndSet<S, S1>) => (updateFn: UpdateFn<S1>): UpdateFn<S> => state => {
+  const cont = updateFn(lens.get(state))
+  if (isPromise(cont))
+    return cont.then(pupdate => (state: S) =>
+      lens.set(pupdate(lens.get(state)))(state)
+    )
+  else if (isObservable(cont)) {
+    return cont.pipe(
+      map(pupdate => (state: S) => {
+        const newS1 = pupdate(lens.get(state))
+        return lens.set(newS1)(state)
+      })
+    )
+  }
+  return lens.set(cont)(state)
+}
+
 export const childDispatchFromLens = <S, S1>(
   parentDispatch: Dispatch<S>,
   lens: GetAndSet<S, S1>
 ): Dispatch<S1> => {
   let dispatch = (((
-    update: UpdateFn<S1>,
+    update: Update<S1>,
     opts?: DispatchOpts
   ) => {
-    parentDispatch(
-      state => {
-        const cont = update(lens.get(state))
-        if (isPromise(cont))
-          return cont.then(pupdate => (state: S) =>
-            lens.set(pupdate(lens.get(state)))(state)
-          )
-        else if (isObservable(cont)) {
-          return cont.pipe(
-            map(pupdate => (state: S) => {
-              const newS1 = pupdate(lens.get(state))
-              return lens.set(newS1)(state)
-            })
-          )
-        }
-        return lens.set(cont)(state)
-      },
-      {
-        tag: opts && opts.tag ? opts.tag : update.tag,
-        noReplay: opts && opts.noReplay ? opts.noReplay : update.noReplay,
-        takeLatest: opts && opts.takeLatest && opts.tag ? opts.takeLatest : update.takeLatest
-      }
-    )
+    const optsParam: DispatchOpts = {
+      tag: opts && opts.tag ? opts.tag : update.tag,
+      noReplay: opts && opts.noReplay ? opts.noReplay : update.noReplay,
+      takeLatest: opts && opts.takeLatest && opts.tag ? opts.takeLatest : update.takeLatest
+    }
+    if (isTransitions(update)) {
+      parentDispatch(
+        update.map(mapUpdateTo(lens)),
+        optsParam
+      )
+    } else {
+      parentDispatch(
+        mapUpdateTo(lens)(update), optsParam
+      )
+    }
   }) as any) as Dispatch<S1>
   dispatch[DispatchSymbol] = true
   return dispatch
@@ -128,24 +159,31 @@ export const asyncCallTracker = (): AsyncCallTracker => {
       return asyncCalls[name]
     },
     record(name: string): number {
-      asyncCalls[name] = Date.now()
+      if (Option.isEmpty(asyncCalls[name]))
+        asyncCalls[name] = 0
+      else if (asyncCalls[name] === Number.MAX_SAFE_INTEGER)
+        asyncCalls[name] = 0
+      else
+        asyncCalls[name] += 1
       return asyncCalls[name]
     }
   }
 }
 
-export const takeLatest = <S>(update: UpdateFn<S>, name: string): UpdateFn<S> => {
+export const takeLatest = <S>(update: Update<S>, name: string): Update<S> => {
   update.tag = name
   update.takeLatest = true
   return update
 }
 
-export const disableReplay = <S>(update: UpdateFn<S>): UpdateFn<S> => {
+export const disableReplay = <S>(update: Update<S>): Update<S> => {
   update.noReplay = false
   return update
 }
 
-export const tag = <S>(update: UpdateFn<S>, name: string): UpdateFn<S> => {
+export const transitions = <S>(...updates: UpdateFn<S>[]): Transitions<S> => updates
+
+export const tag = <S>(update: Update<S>, name: string): Update<S> => {
   update.tag = name
   return update
 }

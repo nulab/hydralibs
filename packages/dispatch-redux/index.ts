@@ -1,4 +1,4 @@
-import {UpdateFn, isPromise, Dispatch, DispatchSymbol, DispatchOpts, AsyncCallTracker, asyncCallTracker} from "hydra-dispatch"
+import {Update, isPromise, Dispatch, DispatchSymbol, DispatchOpts, AsyncCallTracker, asyncCallTracker, UpdateFn, isTransitions, Transitions} from "hydra-dispatch"
 import {Action, Dispatch as ReduxDispatch} from "redux"
 import {isObservable} from "rxjs"
 
@@ -6,7 +6,7 @@ export type SetStateType = "SetState"
 export const SetStateType: SetStateType = "SetState"
 export interface SetState<S> {
   noReplay?: boolean
-  state: S
+  state: S,
   kind: SetStateType
   type: string
 }
@@ -45,7 +45,8 @@ export const updateStateReducer = <S, A extends Action>(
 const Schedule = <S>(
   update: UpdateFn<S>,
   tracker: AsyncCallTracker,
-  opts: DispatchOpts
+  opts: DispatchOpts,
+  nextQueue: Transitions<S>
 ) => (dispatch: ReduxDispatch, getState: () => S) => {
   const state = getState()
   try {
@@ -56,19 +57,25 @@ const Schedule = <S>(
         cont.then(pupdate => {
           const latestRecorded = tracker.latestTimestampRecorded(opts.tag!)
           if (latestRecorded === timestamp)
-            dispatch(Schedule(pupdate, tracker, opts) as any)
+            dispatch(Schedule(pupdate, tracker, opts, nextQueue) as any)
         })
       } else {
         cont
-          .then(pupdate => dispatch(Schedule(pupdate, tracker, opts) as any))
+          .then(pupdate => dispatch(Schedule(pupdate, tracker, opts, nextQueue) as any))
           .catch(err => dispatch(GotError(err)))
       }
     } else if (isObservable(cont)) {
       cont.subscribe(
-        pupdate => dispatch(Schedule(pupdate, tracker, opts) as any),
+        pupdate => dispatch(Schedule(pupdate, tracker, opts, nextQueue) as any),
         err => dispatch(GotError(err))
       )
-    } else dispatch(SetState(cont, opts.tag, opts.noReplay))
+    } else {
+      dispatch(SetState(cont, opts.tag, opts.noReplay))
+      if (nextQueue.length !== 0) {
+        dispatch(Schedule(nextQueue[0], tracker, opts, nextQueue.slice(1)) as any)
+      }
+
+    }
   } catch (err) {
     dispatch(GotError(err))
   }
@@ -78,13 +85,20 @@ export const dispatcherFromRedux = <S>(
   reduxDispatch: ReduxDispatch
 ): Dispatch<S> => {
   let tracker = asyncCallTracker()
-  let dispatch = ((update: UpdateFn<S>, opts?: DispatchOpts) => {
-    const action = Schedule(update, tracker, {
+  let dispatch = ((update: Update<S>, opts?: DispatchOpts) => {
+    const dispatchOpts = {
       tag: opts && opts.tag || update.tag || "SetState",
       noReplay: opts && opts.noReplay || update.noReplay || false,
-      takeLatest: opts && opts.takeLatest && opts.tag ? true : false
-    })
-    reduxDispatch(action as any)
+      takeLatest: (opts && opts.takeLatest && opts.tag) || (update.takeLatest && update.tag) ? true : false
+    }
+    if (isTransitions(update)) {
+      const nextQueue = update.slice(1)
+      const action = Schedule(update[0], tracker, dispatchOpts, nextQueue)
+      reduxDispatch(action as any)
+    } else {
+      const action = Schedule(update, tracker, dispatchOpts, [])
+      reduxDispatch(action as any)
+    }
   }) as Dispatch<S>
   dispatch[DispatchSymbol] = true
   return dispatch
