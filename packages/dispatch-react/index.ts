@@ -16,11 +16,11 @@ import {F1} from "functools-ts"
 type SetState<S> = (state: S | F1<S, S>) => void
 
 /**
- * 
+ *
  * @param updateFn Run the update function and return a promise when it complete
- * @param setState 
- * @param tracker 
- * @param opts 
+ * @param setState
+ * @param tracker
+ * @param opts
  */
 const runUpdateFn = <S>(updateFn: UpdateFn<S>,
                         setState: SetState<S>,
@@ -110,7 +110,7 @@ export const mockSetState = <S>(initialState: S): MockStore<S> => {
 /**
  * Decorate the setState function with a cancellation effect
  * @param cancellation
- * @param setState 
+ * @param setState
  */
-export const withCancellation = <S>(cancellation: () => boolean, setState: SetState<S>): SetState<S> => 
+export const withCancellation = <S>(cancellation: () => boolean, setState: SetState<S>): SetState<S> =>
   state => cancellation() ? null : setState(state)
