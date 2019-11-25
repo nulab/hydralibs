@@ -13,11 +13,19 @@ import {
 } from "hydra-dispatch"
 import {F1} from "functools-ts"
 
+type SetState<S> = (state: S | F1<S, S>) => void
 
+/**
+ * 
+ * @param updateFn Run the update function and return a promise when it complete
+ * @param setState 
+ * @param tracker 
+ * @param opts 
+ */
 const runUpdateFn = <S>(updateFn: UpdateFn<S>,
-                        setState: (state: S | F1<S, S>) => void,
+                        setState: SetState<S>,
                         tracker: AsyncCallTracker,
-                        opts?: DispatchOpts): Promise<void> => {
+                        opts: DispatchOpts): Promise<void> => {
   return new Promise((resolve, reject) => {
     setState(state => {
       const ret = updateFn(state)
@@ -49,9 +57,11 @@ const runUpdateFn = <S>(updateFn: UpdateFn<S>,
   })
 }
 
-export const dispatcherFromReact = <S>(
-  setState: (state: S | F1<S, S>) => void
-): Dispatch<S> => {
+/**
+ * create a dispatch function from a react setState function
+ * @param setState
+ */
+export const dispatcherFromReact = <S>(setState: SetState<S>): Dispatch<S> => {
   const tracker = asyncCallTracker()
   let dispatch = ((
     update: Update<S>,
@@ -97,3 +107,10 @@ export const mockSetState = <S>(initialState: S): MockStore<S> => {
   return store
 }
 
+/**
+ * Decorate the setState function with a cancellation effect
+ * @param cancellation
+ * @param setState 
+ */
+export const withCancellation = <S>(cancellation: () => boolean, setState: SetState<S>): SetState<S> => 
+  state => cancellation() ? null : setState(state)
