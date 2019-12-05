@@ -139,9 +139,9 @@ export const childDispatch = <S, K extends keyof S>(
   }, checkCancellation)
 
 export const childDispatchFromIndex = <S, S1, K extends keyof S>(
-  parentDispatch: Dispatch<S>, 
-  key: K, 
-  idx: number, 
+  parentDispatch: Dispatch<S>,
+  key: K,
+  idx: number,
   checkCancellation?: () => boolean): Dispatch<S1> => {
     return childDispatchFromLens(parentDispatch, {
       get: (state) => (state[key] as any)[idx],
