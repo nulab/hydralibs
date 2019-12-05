@@ -24,12 +24,6 @@ export const defer = (f: () => void): Promise<void> =>
     }
   ))
 
-/*
- * dispatch(transitions(,,,,,,,,,,,,,,,,))
- *
- *
- */
-
 export const DispatchSymbol = Symbol("Dispatch")
 
 export type Dispatch<S> = ((
@@ -82,15 +76,18 @@ export interface GetAndSet<S, S1> {
 export const isTransitions = <S>(update: Update<S>): update is Transitions<S> =>
   update instanceof Array
 
-const mapUpdateTo = <S, S1>(lens: GetAndSet<S, S1>) => (updateFn: UpdateFn<S1>): UpdateFn<S> => state => {
+const mapUpdateTo = <S, S1>(lens: GetAndSet<S, S1>, checkCancellation?: () => boolean) => (updateFn: UpdateFn<S1>): UpdateFn<S> => state => {
+  if (checkCancellation && checkCancellation()) return state
   const cont = updateFn(lens.get(state))
   if (isPromise(cont))
-    return cont.then(pupdate => (state: S) =>
-      lens.set(pupdate(lens.get(state)))(state)
-    )
+    return cont.then(pupdate => (state: S) => {
+      if (checkCancellation && checkCancellation()) return state
+      return lens.set(pupdate(lens.get(state)))(state)
+    })
   else if (isObservable(cont)) {
     return cont.pipe(
       map(pupdate => (state: S) => {
+        if (checkCancellation && checkCancellation()) return state
         const newS1 = pupdate(lens.get(state))
         return lens.set(newS1)(state)
       })
@@ -101,7 +98,8 @@ const mapUpdateTo = <S, S1>(lens: GetAndSet<S, S1>) => (updateFn: UpdateFn<S1>):
 
 export const childDispatchFromLens = <S, S1>(
   parentDispatch: Dispatch<S>,
-  lens: GetAndSet<S, S1>
+  lens: GetAndSet<S, S1>,
+  checkCancellation?: () => boolean
 ): Dispatch<S1> => {
   let dispatch = (((
     update: Update<S1>,
@@ -114,12 +112,12 @@ export const childDispatchFromLens = <S, S1>(
     }
     if (isTransitions(update)) {
       parentDispatch(
-        update.map(mapUpdateTo(lens)),
+        update.map(mapUpdateTo(lens, checkCancellation)),
         optsParam
       )
     } else {
       parentDispatch(
-        mapUpdateTo(lens)(update), optsParam
+        mapUpdateTo(lens, checkCancellation)(update), optsParam
       )
     }
   }) as any) as Dispatch<S1>
@@ -129,7 +127,8 @@ export const childDispatchFromLens = <S, S1>(
 
 export const childDispatch = <S, K extends keyof S>(
   parentDispatch: Dispatch<S>,
-  key: K
+  key: K,
+  checkCancellation?: () => boolean
 ): Dispatch<S[K]> =>
   childDispatchFromLens<S, S[K]>(parentDispatch, {
     get: s => s[key],
@@ -137,18 +136,21 @@ export const childDispatch = <S, K extends keyof S>(
       ...s,
       [key]: s1
     })
-  })
+  }, checkCancellation)
 
-export const childDispatchFromIndex = <S, S1, K extends keyof S>(parentDispatch: Dispatch<S>, key: K, idx: number): Dispatch<S1> =>
-  childDispatchFromLens(parentDispatch, {
-    get: (state) => (state[key] as any)[idx],
-    set: (item) => state => ({
-      ...state,
-      [key]: List.set(state[key] as any, idx, item)
-    })
-  })
-
-
+export const childDispatchFromIndex = <S, S1, K extends keyof S>(
+  parentDispatch: Dispatch<S>, 
+  key: K, 
+  idx: number, 
+  checkCancellation?: () => boolean): Dispatch<S1> => {
+    return childDispatchFromLens(parentDispatch, {
+      get: (state) => (state[key] as any)[idx],
+      set: (item) => state => ({
+        ...state,
+        [key]: List.set(state[key] as any, idx, item)
+      })
+    }, checkCancellation)
+}
 
 export const asyncCallTracker = (): AsyncCallTracker => {
   let asyncCalls: AsyncCalls = {}

@@ -6,7 +6,6 @@ interface State<A> {
   value: A
 }
 
-
 const createSetState = <S>(initial: S): [State<S>, (newState: S | F1<S, S>) => void] => {
   let state: State<S> = {value: initial}
   const setState = (newState: S | F1<S, S>) => {
@@ -65,5 +64,14 @@ describe("dispatch", () => {
       Promise.resolve((_: User): User => ({name}))
     dispatch(setName("newuser"))
     setTimeout(() => expect(state.value.user.name).eql("newuser"), 0)
+  })
+
+  it("should cancel updates if checkCancellation return true", async () => {
+    const [state, setState] = createSetState({user: {name: "test"}})
+    const dispatch = childDispatch<App, "user">(testDispatch(setState), "user", () => true)
+    const setName = (name: string) => async (_: User) =>
+      Promise.resolve((_: User): User => ({name}))
+    dispatch(setName("test2"))
+    setTimeout(() => expect(state.value.user.name).eql("test"), 0);
   })
 })

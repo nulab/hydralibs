@@ -11,6 +11,7 @@ import {
   AsyncCallTracker,
   defer
 } from "hydra-dispatch"
+import React from "react"
 import {F1} from "functools-ts"
 
 type SetState<S> = (state: S | F1<S, S>) => void
@@ -114,3 +115,27 @@ export const mockSetState = <S>(initialState: S): MockStore<S> => {
  */
 export const withCancellation = <S>(cancellation: () => boolean, setState: SetState<S>): SetState<S> =>
   state => cancellation() ? null : setState(state)
+
+
+export type DispatchWithCleanup<S> = (update: Update<S>, opts?: DispatchOpts) => () => void & {
+  [DispatchSymbol]: boolean
+}
+
+
+/**
+ * Still experimental doesn't work yet
+ * @param initialState
+ */
+export const useDispatch = <S>(initialState: S): [S, DispatchWithCleanup<S>] => {
+  const ref = React.useRef(false)
+  const [state, setState] = React.useState(initialState)
+  const setStateWithCancel = withCancellation(() => ref.current, setState)
+  const dispatch = dispatcherFromReact(setStateWithCancel)
+
+  const dispatchWithCleanup = ((update: Update<S>, opts?: DispatchOpts) => {
+    dispatch(update, opts)
+    return () => {ref.current = true}
+  }) as DispatchWithCleanup<S>
+  (dispatchWithCleanup as any)[DispatchSymbol] = true
+  return [state, dispatchWithCleanup]
+}
