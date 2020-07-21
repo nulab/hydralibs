@@ -1,6 +1,6 @@
 {
   "name": "hydra-styled",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc --outDir lib",
@@ -12,7 +12,7 @@
     "fast-equals": "^1.6.1",
     "fastextend": "^1.0.0",
     "functools-ts": "^1.0.3",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "4.17.15",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "polished": "^1.9.3",
