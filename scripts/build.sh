@@ -7,6 +7,7 @@ dirs=`ls`
 for dir in $dirs
 do
   echo $dir
+  npm i
   cd $dir && npm run build
   if [ $? -ne 0 ];
   then
