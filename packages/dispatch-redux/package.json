@@ -3,7 +3,7 @@
   "description": "Redux support for hydra-dispatch",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc --outDir dist",
@@ -17,13 +17,13 @@
     "rxjs": "^6.5.3"
   },
   "devDependencies": {
-    "typescript": "^3.5.3",
+    "@types/chai": "^4.1.7",
     "@types/mocha": "^7.0.2",
     "@types/node": "^11.9.5",
-    "@types/chai": "^4.1.7",
-    "mocha": "^8.0.1",
     "chai": "^4.2.0",
     "esm": "^3.2.25",
-    "ts-mocha": "^7.0.0"
+    "mocha": "^8.1.1",
+    "ts-mocha": "^7.0.0",
+    "typescript": "^3.5.3"
   }
 }
