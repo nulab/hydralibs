@@ -12,7 +12,7 @@
   "dependencies": {
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "hydra-dispatch": "0.2.11",
+    "hydra-dispatch": "0.2.13",
     "functools-ts": "^1.0.3",
     "rxjs": "^6.5.3"
   },
