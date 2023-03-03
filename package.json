@@ -8,6 +8,10 @@
     "format": "prettier --write \"**/*.{ts*(x),js*(on),scss}\"",
     "test": "./scripts/test.sh"
   },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
