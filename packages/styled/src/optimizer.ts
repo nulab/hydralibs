@@ -1,16 +1,16 @@
 import {List} from "functools-ts"
-import {StyledArg, DefaultTag, isStyledComponent} from "./types"
+import {StyledArg, DefaultTag, isStyledComponent, Tag} from "./types"
 import merge from "lodash-es/merge"
 import reverse from "lodash-es/reverse"
 
-type Styles = List<StyledArg<{}, {}, DefaultTag>>
+type Styles<T extends Tag = DefaultTag> = List<StyledArg<{}, {}, T>>
 
 interface OptimizedStyled {
   styles: Styles
   defaults: {}
 }
 
-export const optimize = (styles: Styles): OptimizedStyled => {
+export const optimize = <T extends Tag = DefaultTag>(styles: Styles<T>): OptimizedStyled => {
   const optimizedStyled: OptimizedStyled = {
     styles: [],
     defaults: {}
