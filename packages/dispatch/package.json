@@ -9,16 +9,16 @@
     "test": "mocha -r ts-node/register/transpile-only index.test.ts"
   },
   "dependencies": {
-    "rxjs": "^6.5.3",
-    "functools-ts": "1.0.3"
+    "functools-ts": "1.0.3",
+    "rxjs": "^6.6.7"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.3.4",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^11.9.5",
-    "chai": "^4.2.0",
-    "mocha": "^8.1.1",
+    "@types/node": "^11.15.54",
+    "chai": "^4.3.7",
+    "mocha": "^8.4.0",
     "ts-mocha": "^8.0.0",
-    "typescript": "^3.5.3"
+    "typescript": "^4.9.5"
   }
 }
