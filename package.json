@@ -4,16 +4,12 @@
   "scripts": {
     "build": "turbo build",
     "check": "npm run build && npm run lint && npm test",
-    "lint": "tslint -c tslint.json 'examples/counter/src/*.ts' 'packages/bootstrap/src/*.ts' 'packages/dispatch/*.ts' 'packages/dispatch-react/*.ts' 'packages/dispatch-redux/*.ts' 'packages/router/*.ts'",
+    "lint": "tslint -c tslint.json 'packages/dispatch/*.ts' 'packages/dispatch-react/*.ts' 'packages/dispatch-redux/*.ts' 'packages/dispatch-styled/src/*.ts'",
     "format": "prettier --write \"**/*.{ts*(x),js*(on),scss}\"",
     "test": "turbo test"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.4",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^18.14.6",
     "husky": "^8.0.3",
-    "lodash.template": "^4.5.0",
     "prettier": "^1.19.1",
     "tslint": "^5.20.1",
     "tslint-eslint-rules": "^4.1.1",
