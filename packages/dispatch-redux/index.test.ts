@@ -59,7 +59,7 @@ describe("Redux dispatch tests", () => {
     const firstUpdate = (): Data => ({books: [Book(1, "test")]})
     const secondUpdate = async (_: Data) => {
       await wait(5)
-      return state => ({books: [...state.books, Book(2, "test")]})
+      return (state: Data) => ({books: [...state.books, Book(2, "test")]})
     }
     dispatch(transitions(firstUpdate, secondUpdate))
     await wait(10)
@@ -104,7 +104,7 @@ describe("Redux dispatch tests", () => {
       Book(2, "test")
     ]
     const dispatch = dispatcherFromRedux<Data>(store.dispatch)
-    dispatch(async (state: Data) => {
+    dispatch(async (_state: Data) => {
       dispatch((_: Data) => ({books: [Book(1, "test")]}))
       await wait(5)
       return (state: Data) => ({books: [...state.books, Book(2, "test")]})
