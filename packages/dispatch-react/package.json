@@ -6,7 +6,7 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc --outDir dist",
-    "test": "mocha -r ts-node/register/transpile-only -r esm index.test.ts"
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha -r ts-node/register/transpile-only -r esm index.test.ts"
   },
   "dependencies": {
     "functools-ts": "^1.0.3",

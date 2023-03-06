@@ -2,22 +2,22 @@
   "name": "hydralibs",
   "version": "0.2.13",
   "scripts": {
-    "build": "./scripts/build.sh",
+    "build": "turbo build",
     "check": "npm run build && npm run lint && npm test",
     "lint": "tslint -c tslint.json 'examples/counter/src/*.ts' 'packages/bootstrap/src/*.ts' 'packages/dispatch/*.ts' 'packages/dispatch-react/*.ts' 'packages/dispatch-redux/*.ts' 'packages/router/*.ts'",
     "format": "prettier --write \"**/*.{ts*(x),js*(on),scss}\"",
-    "test": "./scripts/test.sh"
+    "test": "turbo test"
   },
   "devDependencies": {
     "@types/chai": "^4.3.4",
     "@types/mocha": "^5.2.7",
     "@types/node": "^18.14.6",
     "husky": "^1.3.1",
-    "lerna": "^3.22.1",
     "lodash.template": "^4.5.0",
     "prettier": "^1.19.1",
     "tslint": "^5.20.1",
     "tslint-eslint-rules": "^4.1.1",
+    "turbo": "^1.8.3",
     "typescript": "^3.9.10"
   },
   "workspaces": [
