@@ -1,5 +1,4 @@
 import {styled, css} from "./styled"
-import {expect} from "chai"
 
 describe("core/styled/optimizer", () => {
   const styledParagraph = styled(css({backgroundColor: "blue"})).withTag("p")
@@ -11,11 +10,11 @@ describe("core/styled/optimizer", () => {
   )
 
   it("should optimized styled component pipeline", () => {
-    expect(styledParagraph.__styles.length).eql(1)
+    expect(styledParagraph.__styles.length).toEqual(1)
   })
 
   it("styles size should be 3", () => {
-    expect(styledDiv.__styles.length).eql(4)
-    expect(typeof styledDiv.__styles[1]).eql("function")
+    expect(styledDiv.__styles.length).toEqual(4)
+    expect(typeof styledDiv.__styles[1]).toEqual("function")
   })
 })

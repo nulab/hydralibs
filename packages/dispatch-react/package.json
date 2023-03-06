@@ -9,20 +9,20 @@
     "test": "mocha -r ts-node/register/transpile-only -r esm index.test.ts"
   },
   "dependencies": {
-    "react": "^16.8.6",
     "functools-ts": "^1.0.3",
     "hydra-dispatch": "0.2.13",
-    "rxjs": "^6.5.3"
+    "react": "^16.14.0",
+    "rxjs": "^6.6.7"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.3.4",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^11.9.5",
-    "@types/react": "^16.8.5",
-    "chai": "^4.2.0",
+    "@types/node": "^11.15.54",
+    "@types/react": "^16.14.35",
+    "chai": "^4.3.7",
     "esm": "^3.2.25",
-    "mocha": "^8.1.1",
+    "mocha": "^8.4.0",
     "ts-mocha": "^8.0.0",
-    "typescript": "^3.5.3"
+    "typescript": "^4.9.5"
   }
 }
