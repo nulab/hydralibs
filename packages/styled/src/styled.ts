@@ -36,7 +36,7 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
   ) => {
     type Props = $Props<P, U>
     const component = (class ReactStyledComponent2 extends ReactComponent<
-      Props
+    Props
     > {
       private className: string
       private tag: U
@@ -76,25 +76,25 @@ export const styled = ((<P, T extends Tag = DefaultTag>(
           classNames: {
             ...(!isEmpty(startCss)
               ? {
-                  appear: emotionCss(startCss),
-                  appearActive: emotionCss(
-                    fastPick(css, ...Object.keys(startCss))
-                  )
-                }
+                appear: emotionCss(startCss),
+                appearActive: emotionCss(
+                  fastPick(css, ...Object.keys(startCss))
+                )
+              }
               : {}),
             ...(!isEmpty(endCss)
               ? {
-                  exit: emotionCss(endCss),
-                  exitActive: emotionCss(
-                    Object.keys(endCss).reduce(
-                      (obj, key) => {
-                        obj[key] = css[key]
-                        return obj
-                      },
-                      {} as CSSObject
-                    )
+                exit: emotionCss(endCss),
+                exitActive: emotionCss(
+                  Object.keys(endCss).reduce(
+                    (obj, key) => {
+                      obj[key] = css[key]
+                      return obj
+                    },
+                    {} as CSSObject
                   )
-                }
+                )
+              }
               : {})
           },
           in: true,

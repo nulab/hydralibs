@@ -14,15 +14,15 @@ export type Transitions<S> = List<UpdateFn<S>>
 export type Update<S> = (UpdateFn<S> | Transitions<S>) & DispatchOpts
 
 export const defer = (f: () => void): Promise<void> =>
-  new Promise((resolve, reject) => setTimeout(() => {
+  new Promise((resolve, reject) =>
+    setTimeout(() => {
       try {
         f()
         resolve()
       } catch (ex) {
         reject(ex)
       }
-    }
-  ))
+    }))
 
 /*
  * dispatch(transitions(,,,,,,,,,,,,,,,,))

@@ -47,7 +47,7 @@ module.exports = {
                 "allowTypedFunctionExpressions": false
             }
         ],
-        "@typescript-eslint/indent": "error",
+        "@typescript-eslint/indent": ["error", 2],
         "@typescript-eslint/naming-convention": [
             "error",
             {

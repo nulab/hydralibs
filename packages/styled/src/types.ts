@@ -68,20 +68,20 @@ export const isBoxedCss = (obj: any): obj is BoxedCSSObject =>
 export type OneOrMany<T> = T | List<T>
 export type ListProps<T> = {[P in keyof T]: OneOrMany<T[P]>}
 export type StyleOf<A extends StyledComponent<{}, any>> = Partial<
-  A["__styleProps"]
+A["__styleProps"]
 >
 export type PropsOf<A extends StyledComponent<{}, any>> = Partial<A["__props"]>
 
 export type Props<P, T extends Tag = DefaultTag> = WithPseudo<Partial<P>> &
-  JSX.IntrinsicElements[T] & {
-    tag?: Tag
-    children?: JSXChildren
-    onMount?: (el: HTMLElement) => void
-    onRender?: (el: HTMLElement) => void
-    onClickOutside?: (evt: MouseEvent) => void
-    focusable?: boolean
-    autoFocus?: boolean
-  }
+JSX.IntrinsicElements[T] & {
+  tag?: Tag
+  children?: JSXChildren
+  onMount?: (el: HTMLElement) => void
+  onRender?: (el: HTMLElement) => void
+  onClickOutside?: (evt: MouseEvent) => void
+  focusable?: boolean
+  autoFocus?: boolean
+}
 
 export interface StyledComponent<P, T extends Tag = DefaultTag> {
   (props: Props<P, T>): JSX.Element
@@ -256,8 +256,8 @@ export interface StyledFn {
     n: StyledArg<N, A & B & C & D & E & F & G & H & I & J & K & L & M, T>,
     o: StyledArg<O, A & B & C & D & E & F & G & H & I & J & K & L & M & N, T>
   ): StyledComponent<
-    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O,
-    T
+  A & B & C & D & E & F & G & H & I & J & K & L & M & N & O,
+  T
   >
   <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, T extends Tag = DefaultTag>(
     a: RootStyledArg<A, T>,
@@ -277,8 +277,8 @@ export interface StyledFn {
     o: StyledArg<O, A & B & C & D & E & F & G & H & I & J & K & L & M & N, T>,
     p: StyledArg<P, A & B & C & D & E & F & G & H & I & J & K & L & M & N, T>
   ): StyledComponent<
-    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P,
-    T
+  A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P,
+  T
   >
   <
     A,
@@ -316,18 +316,18 @@ export interface StyledFn {
     n: StyledArg<N, A & B & C & D & E & F & G & H & I & J & K & L & M, T>,
     o: StyledArg<O, A & B & C & D & E & F & G & H & I & J & K & L & M & N, T>,
     p: StyledArg<
-      P,
-      A & B & C & D & E & F & G & H & I & J & K & L & M & N & O,
-      T
+    P,
+    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O,
+    T
     >,
     q: StyledArg<
-      Q,
-      A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P,
-      T
+    Q,
+    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P,
+    T
     >
   ): StyledComponent<
-    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q,
-    T
+  A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q,
+  T
   >
   <
     A,
@@ -366,22 +366,22 @@ export interface StyledFn {
     n: StyledArg<N, A & B & C & D & E & F & G & H & I & J & K & L & M, T>,
     o: StyledArg<O, A & B & C & D & E & F & G & H & I & J & K & L & M & N, T>,
     p: StyledArg<
-      P,
-      A & B & C & D & E & F & G & H & I & J & K & L & M & N & O,
-      T
+    P,
+    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O,
+    T
     >,
     q: StyledArg<
-      Q,
-      A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P,
-      T
+    Q,
+    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P,
+    T
     >,
     r: StyledArg<
-      R,
-      A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q,
-      T
+    R,
+    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q,
+    T
     >
   ): StyledComponent<
-    A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q & R,
-    T
+  A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q & R,
+  T
   >
 }

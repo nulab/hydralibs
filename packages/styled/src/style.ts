@@ -173,8 +173,8 @@ export const responsive = function<T>(
     precedence.indexOf(a) > precedence.indexOf(b)
       ? 1
       : precedence.indexOf(a) === precedence.indexOf(b)
-      ? 0
-      : -1
+        ? 0
+        : -1
   )
   return keys.reduce(
     (result, key) =>

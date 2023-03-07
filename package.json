@@ -6,6 +6,7 @@
     "check": "npm run build && npm run lint && npm test",
     "lint": "tslint -c tslint.json 'packages/dispatch/*.ts' 'packages/dispatch-react/*.ts' 'packages/dispatch-redux/*.ts' 'packages/dispatch-styled/src/*.ts'",
     "eslint": "eslint packages/dispatch/*.ts packages/dispatch-react/*.ts packages/dispatch-redux/*.ts packages/styled/src/*.ts",
+    "eslint:fix": "eslint --fix packages/dispatch/*.ts packages/dispatch-react/*.ts packages/dispatch-redux/*.ts packages/styled/src/*.ts",
     "format": "prettier --write \"**/*.{ts*(x),js*(on),scss}\"",
     "test": "turbo test"
   },

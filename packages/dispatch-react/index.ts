@@ -14,10 +14,12 @@ import {
 import {F1} from "functools-ts"
 
 
-const runUpdateFn = <S>(updateFn: UpdateFn<S>,
-                        setState: (state: S | F1<S, S>) => void,
-                        tracker: AsyncCallTracker,
-                        opts?: DispatchOpts): Promise<void> => {
+const runUpdateFn = <S>(
+  updateFn: UpdateFn<S>,
+  setState: (state: S | F1<S, S>) => void,
+  tracker: AsyncCallTracker,
+  opts?: DispatchOpts
+): Promise<void> => {
   return new Promise((resolve, reject) => {
     setState(state => {
       const ret = updateFn(state)
@@ -29,8 +31,8 @@ const runUpdateFn = <S>(updateFn: UpdateFn<S>,
             if (latestRecorded === timestamp)
               setState((state: S) => d(state))
           })
-          .then(resolve)
-          .catch(reject)
+            .then(resolve)
+            .catch(reject)
         } else
           ret.then(d => setState((state: S) => d(state)))
             .then(resolve)
