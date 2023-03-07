@@ -4,7 +4,9 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc --outDir lib",
-    "test": "jest src/*.test.ts"
+    "test": "jest src/*.test.ts",
+    "lint": "eslint src/** --ext ts,tsx",
+    "lint:fix": "eslint src/** --ext ts,tsx --fix"
   },
   "dependencies": {
     "@emotion/core": "^10.3.1",
@@ -26,6 +28,7 @@
     "@types/react": "^16.14.35",
     "@types/react-dom": "^16.9.18",
     "@types/react-transition-group": "^2.9.2",
+    "eslint-config-custom": "*",
     "jest": "^29.4.3",
     "jest-environment-jsdom": "^29.4.3",
     "ts-jest": "^29.0.5",

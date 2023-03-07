@@ -11,6 +11,6 @@ export default styled(({shadow}: Shadow) =>
         ? "0 4px 7px 2px rgba(0, 0, 0, 0.05)"
         : shadow
         ? shadow
-        : undefined
+        : undefined,
   })
 )

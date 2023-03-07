@@ -2,18 +2,18 @@ import {createStore, compose, Store, applyMiddleware} from "redux"
 import thunk from "redux-thunk"
 import {updateStateReducer, dispatcherFromRedux} from "./index"
 import {expect} from "chai"
-import {transitions, takeLatest} from "hydra-dispatch";
-import {from} from "rxjs";
+import {transitions, takeLatest} from "hydra-dispatch"
+import {from} from "rxjs"
 
 interface Book {
   id: number
   name: string
   description: string
 }
-const Book = (id: number, name: string, description: string = ""): Book => ({
+const newBook = (id: number, name: string, description: string = ""): Book => ({
   id,
   name,
-  description
+  description,
 })
 
 interface Data {
@@ -30,13 +30,12 @@ const setupStore = (initialState: Data): Store<Data> =>
 const wait = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(() => resolve(), ms))
 
-
 describe("Redux dispatch tests", () => {
   it("should test if dispatch a sync function works", async () => {
     const store = setupStore({books: []})
     const dispatch = dispatcherFromRedux<Data>(store.dispatch)
     dispatch(() => ({
-      books: [Book(1, "test")]
+      books: [newBook(1, "test")],
     }))
     await wait(0)
     expect(store.getState().books[0].id).to.eq(1)
@@ -45,8 +44,10 @@ describe("Redux dispatch tests", () => {
   it("should test if dispatch a transition works", async () => {
     const store = setupStore({books: []})
     const dispatch = dispatcherFromRedux<Data>(store.dispatch)
-    const firstUpdate = (): Data => ({books: [Book(1, "test")]})
-    const secondUpdate = (state: Data): Data => ({books: [...state.books, Book(2, "test")]})
+    const firstUpdate = (): Data => ({books: [newBook(1, "test")]})
+    const secondUpdate = (state: Data): Data => ({
+      books: [...state.books, newBook(2, "test")],
+    })
     dispatch(transitions(firstUpdate, secondUpdate))
     await wait(0)
     expect(store.getState().books[1].id).eq(2)
@@ -55,10 +56,10 @@ describe("Redux dispatch tests", () => {
   it("should test if dispatch transitions with async functions works", async () => {
     const store = setupStore({books: []})
     const dispatch = dispatcherFromRedux<Data>(store.dispatch)
-    const firstUpdate = (): Data => ({books: [Book(1, "test")]})
+    const firstUpdate = (): Data => ({books: [newBook(1, "test")]})
     const secondUpdate = async (_: Data) => {
       await wait(5)
-      return (state: Data) => ({books: [...state.books, Book(2, "test")]})
+      return (state: Data) => ({books: [...state.books, newBook(2, "test")]})
     }
     dispatch(transitions(firstUpdate, secondUpdate))
     await wait(10)
@@ -69,44 +70,51 @@ describe("Redux dispatch tests", () => {
     const store = setupStore({books: []})
     const expectedResult: Data = {
       books: [
-        Book(1, "test"),
-        Book(2, "test"),
-        Book(3, "test"),
-        Book(4, "test"),
-        Book(5, "test")
-      ]
+        newBook(1, "test"),
+        newBook(2, "test"),
+        newBook(3, "test"),
+        newBook(4, "test"),
+        newBook(5, "test"),
+      ],
     }
     const dispatch = dispatcherFromRedux<Data>(store.dispatch)
-    const firstUpdate = (): Data => ({books: [Book(1, "test")]})
+    const firstUpdate = (): Data => ({books: [newBook(1, "test")]})
     const secondUpdate = async (_: Data) => {
       await wait(5)
-      return (state: Data) => ({books: [...state.books, Book(2, "test")]})
+      return (state: Data) => ({books: [...state.books, newBook(2, "test")]})
     }
-    const thirdUpdate = (state: Data): Data => ({books: [...state.books, Book(3, "test")]})
+    const thirdUpdate = (state: Data): Data => ({
+      books: [...state.books, newBook(3, "test")],
+    })
     const fourthUpdate = async (_: Data) => {
       await wait(5)
-      return (state: Data) => ({books: [...state.books, Book(4, "test")]})
+      return (state: Data) => ({books: [...state.books, newBook(4, "test")]})
     }
     const fifthUpdate = async (_: Data) => {
       await wait(5)
-      return (state: Data) => ({books: [...state.books, Book(5, "test")]})
+      return (state: Data) => ({books: [...state.books, newBook(5, "test")]})
     }
-    dispatch(transitions(firstUpdate, secondUpdate, thirdUpdate, fourthUpdate, fifthUpdate))
+    dispatch(
+      transitions(
+        firstUpdate,
+        secondUpdate,
+        thirdUpdate,
+        fourthUpdate,
+        fifthUpdate
+      )
+    )
     await wait(30)
     expect(store.getState()).eql(expectedResult)
   })
 
   it("dispatch in a dispatch function should work", async () => {
     const store = setupStore({books: []})
-    const expectedResult = [
-      Book(1, "test"),
-      Book(2, "test")
-    ]
+    const expectedResult = [newBook(1, "test"), newBook(2, "test")]
     const dispatch = dispatcherFromRedux<Data>(store.dispatch)
     dispatch(async (_state: Data) => {
-      dispatch((_: Data) => ({books: [Book(1, "test")]}))
+      dispatch((_: Data) => ({books: [newBook(1, "test")]}))
       await wait(5)
-      return (state: Data) => ({books: [...state.books, Book(2, "test")]})
+      return (state: Data) => ({books: [...state.books, newBook(2, "test")]})
     })
     await wait(10)
     expect(store.getState().books).eql(expectedResult)
@@ -115,18 +123,19 @@ describe("Redux dispatch tests", () => {
   it("should dispatch a stream of function", async () => {
     const store = setupStore({books: []})
     const expectedResult = [
-      Book(1, "test"),
-      Book(2, "test"),
-      Book(3, "test"),
-      Book(4, "test")
+      newBook(1, "test"),
+      newBook(2, "test"),
+      newBook(3, "test"),
+      newBook(4, "test"),
     ]
     const dispatch = dispatcherFromRedux<Data>(store.dispatch)
-    const updates = (_: Data) => from([
-      (state: Data): Data => ({books: [...state.books, Book(1, "test")]}),
-      (state: Data) => ({books: [...state.books, Book(2, "test")]}),
-      (state: Data) => ({books: [...state.books, Book(3, "test")]}),
-      (state: Data) => ({books: [...state.books, Book(4, "test")]})
-    ])
+    const updates = (_: Data) =>
+      from([
+        (state: Data): Data => ({books: [...state.books, newBook(1, "test")]}),
+        (state: Data) => ({books: [...state.books, newBook(2, "test")]}),
+        (state: Data) => ({books: [...state.books, newBook(3, "test")]}),
+        (state: Data) => ({books: [...state.books, newBook(4, "test")]}),
+      ])
     dispatch(updates)
     await wait(10)
     expect(store.getState().books).eql(expectedResult)
@@ -134,17 +143,15 @@ describe("Redux dispatch tests", () => {
 
   it("dispatch should take latest result if specified", async () => {
     const store = setupStore({books: []})
-    const expectedResult = [
-      Book(2, "test")
-    ]
+    const expectedResult = [newBook(2, "test")]
     const dispatch = dispatcherFromRedux<Data>(store.dispatch)
     const first = async (_: Data) => {
       await wait(10)
-      return (_: Data) => ({books: [Book(1, "test")]})
+      return (_: Data) => ({books: [newBook(1, "test")]})
     }
     const second = async (_: Data) => {
       await wait(5)
-      return (_: Data) => ({books: [Book(2, "test")]})
+      return (_: Data) => ({books: [newBook(2, "test")]})
     }
     dispatch(takeLatest(first, "fetchBooks"))
     dispatch(takeLatest(second, "fetchBooks"))

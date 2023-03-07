@@ -3,8 +3,8 @@ import {Observable} from "rxjs"
 import {map} from "rxjs/operators"
 
 export type DispatchOpts = {
-  tag?: string,
-  noReplay?: boolean,
+  tag?: string
+  noReplay?: boolean
   takeLatest?: boolean
 }
 
@@ -22,7 +22,8 @@ export const defer = (f: () => void): Promise<void> =>
       } catch (ex) {
         reject(ex)
       }
-    }))
+    })
+  )
 
 /*
  * dispatch(transitions(,,,,,,,,,,,,,,,,))
@@ -30,12 +31,11 @@ export const defer = (f: () => void): Promise<void> =>
  *
  */
 
-export const DispatchSymbol = Symbol("Dispatch")
+export const DISPATCH_SYMBOL = Symbol("Dispatch")
 
-export type Dispatch<S> = ((
-  update: Update<S>,
-  opts?: DispatchOpts
-) => void) & {[DispatchSymbol]: boolean}
+export type Dispatch<S> = ((update: Update<S>, opts?: DispatchOpts) => void) & {
+  [DISPATCH_SYMBOL]: boolean
+}
 
 export interface Dispatcher<S> {
   dispatch: Dispatch<S>
@@ -60,8 +60,11 @@ export const isPromise = <S>(
   cont: Continuation<S>
 ): cont is Promise<F1<S, S>> => {
   const contAny = cont as any
-  return contAny instanceof Promise || (contAny.constructor && contAny.constructor.name === "Promise") ||
+  return (
+    contAny instanceof Promise ||
+    (contAny.constructor && contAny.constructor.name === "Promise") ||
     (typeof contAny.then === "function" && typeof contAny.catch === "function")
+  )
 }
 
 export const isObservable = <S>(
@@ -69,10 +72,10 @@ export const isObservable = <S>(
 ): cont is Observable<F1<S, S>> => !!(cont as any).subscribe
 
 export const isDispatch = <S>(obj: any): obj is Dispatch<S> =>
-  !!obj[DispatchSymbol]
+  !!obj[DISPATCH_SYMBOL]
 
 export const nullDispatch = ((_: UpdateFn<any>) => {}) as Dispatch<any>
-nullDispatch[DispatchSymbol] = true
+nullDispatch[DISPATCH_SYMBOL] = true
 
 export interface GetAndSet<S, S1> {
   get: Get<S, S1>
@@ -82,48 +85,46 @@ export interface GetAndSet<S, S1> {
 export const isTransitions = <S>(update: Update<S>): update is Transitions<S> =>
   update instanceof Array
 
-const mapUpdateTo = <S, S1>(lens: GetAndSet<S, S1>) => (updateFn: UpdateFn<S1>): UpdateFn<S> => state => {
-  const cont = updateFn(lens.get(state))
-  if (isPromise(cont))
-    return cont.then(pupdate => (state: S) =>
-      lens.set(pupdate(lens.get(state)))(state)
-    )
-  else if (isObservable(cont)) {
-    return cont.pipe(
-      map(pupdate => (state: S) => {
-        const newS1 = pupdate(lens.get(state))
-        return lens.set(newS1)(state)
-      })
-    )
+const mapUpdateTo =
+  <S, S1>(lens: GetAndSet<S, S1>) =>
+  (updateFn: UpdateFn<S1>): UpdateFn<S> =>
+  (state) => {
+    const cont = updateFn(lens.get(state))
+    if (isPromise(cont))
+      return cont.then(
+        (pupdate) => (state: S) => lens.set(pupdate(lens.get(state)))(state)
+      )
+    else if (isObservable(cont)) {
+      return cont.pipe(
+        map((pupdate) => (state: S) => {
+          const newS1 = pupdate(lens.get(state))
+          return lens.set(newS1)(state)
+        })
+      )
+    }
+    return lens.set(cont)(state)
   }
-  return lens.set(cont)(state)
-}
 
 export const childDispatchFromLens = <S, S1>(
   parentDispatch: Dispatch<S>,
   lens: GetAndSet<S, S1>
 ): Dispatch<S1> => {
-  let dispatch = (((
-    update: Update<S1>,
-    opts?: DispatchOpts
-  ) => {
+  let dispatch = ((update: Update<S1>, opts?: DispatchOpts) => {
     const optsParam: DispatchOpts = {
       tag: opts && opts.tag ? opts.tag : update.tag,
       noReplay: opts && opts.noReplay ? opts.noReplay : update.noReplay,
-      takeLatest: opts && opts.takeLatest && opts.tag ? opts.takeLatest : update.takeLatest
+      takeLatest:
+        opts && opts.takeLatest && opts.tag
+          ? opts.takeLatest
+          : update.takeLatest,
     }
     if (isTransitions(update)) {
-      parentDispatch(
-        update.map(mapUpdateTo(lens)),
-        optsParam
-      )
+      parentDispatch(update.map(mapUpdateTo(lens)), optsParam)
     } else {
-      parentDispatch(
-        mapUpdateTo(lens)(update), optsParam
-      )
+      parentDispatch(mapUpdateTo(lens)(update), optsParam)
     }
-  }) as any) as Dispatch<S1>
-  dispatch[DispatchSymbol] = true
+  }) as any as Dispatch<S1>
+  dispatch[DISPATCH_SYMBOL] = true
   return dispatch
 }
 
@@ -132,41 +133,43 @@ export const childDispatch = <S, K extends keyof S>(
   key: K
 ): Dispatch<S[K]> =>
   childDispatchFromLens<S, S[K]>(parentDispatch, {
-    get: s => s[key],
-    set: s1 => s => ({
+    get: (s) => s[key],
+    set: (s1) => (s) => ({
       ...s,
-      [key]: s1
-    })
+      [key]: s1,
+    }),
   })
 
-export const childDispatchFromIndex = <S, S1, K extends keyof S>(parentDispatch: Dispatch<S>, key: K, idx: number): Dispatch<S1> =>
+export const childDispatchFromIndex = <S, S1, K extends keyof S>(
+  parentDispatch: Dispatch<S>,
+  key: K,
+  idx: number
+): Dispatch<S1> =>
   childDispatchFromLens(parentDispatch, {
     get: (state) => (state[key] as any)[idx],
-    set: (item) => state => ({
+    set: (item) => (state) => ({
       ...state,
-      [key]: List.set(state[key] as any, idx, item)
-    })
+      [key]: List.set(state[key] as any, idx, item),
+    }),
   })
-
-
 
 export const asyncCallTracker = (): AsyncCallTracker => {
   let asyncCalls: AsyncCalls = {}
   return {
     latestTimestampRecorded(name: string): number {
       if (Option.isEmpty(asyncCalls[name]))
-        throw new Error(`No async call found for name: ${name} this is probably a bug in dispatch-react`)
+        throw new Error(
+          `No async call found for name: ${name} this is probably a bug in dispatch-react`
+        )
       return asyncCalls[name]
     },
     record(name: string): number {
-      if (Option.isEmpty(asyncCalls[name]))
-        asyncCalls[name] = 0
+      if (Option.isEmpty(asyncCalls[name])) asyncCalls[name] = 0
       else if (asyncCalls[name] === Number.MAX_SAFE_INTEGER)
         asyncCalls[name] = 0
-      else
-        asyncCalls[name] += 1
+      else asyncCalls[name] += 1
       return asyncCalls[name]
-    }
+    },
   }
 }
 
@@ -181,7 +184,8 @@ export const disableReplay = <S>(update: Update<S>): Update<S> => {
   return update
 }
 
-export const transitions = <S>(...updates: UpdateFn<S>[]): Transitions<S> => updates
+export const transitions = <S>(...updates: UpdateFn<S>[]): Transitions<S> =>
+  updates
 
 export const tag = <S>(update: Update<S>, name: string): Update<S> => {
   update.tag = name

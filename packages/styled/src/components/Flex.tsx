@@ -5,11 +5,11 @@ import {styled, css} from "../styled"
 import {Overflow} from "../props/overflow"
 import {Option} from "functools-ts"
 
-/** 
- * Using these manual type definitions 
- * to make typing stronger than found in csstype: 
+/**
+ * Using these manual type definitions
+ * to make typing stronger than found in csstype:
  * https://github.com/frenic/csstype/issues/8
-*/
+ */
 type SelfPosition =
   | "center"
   | "end"
@@ -51,8 +51,8 @@ export const Flex = styled(
         direction: (val: FlexProps["direction"]) => ({flexDirection: val}),
         alignItems: (val: FlexProps["alignItems"]) => ({alignItems: val}),
         justifyContent: (val: FlexProps["justifyContent"]) => ({
-          justifyContent: val
-        })
+          justifyContent: val,
+        }),
       })
     )
 )
@@ -61,30 +61,30 @@ export const Row = styled(
   Flex,
   {direction: "row"},
   (props: {scroll: boolean}): Overflow => ({
-    overflowX: props.scroll ? "auto" : "visible"
+    overflowX: props.scroll ? "auto" : "visible",
   }),
   (props: {gap: number | string}) =>
     Option.isDefined(props.gap)
       ? css({
           "& > *:not(:last-child)": {
-            marginRight: numToPx(props.gap)
-          }
+            marginRight: numToPx(props.gap),
+          },
         })
       : css({}),
   (props: {separator: string}) =>
     Option.isDefined(props.separator)
       ? css({
           "& > :not(:last-child)": {
-            borderRight: props.separator
-          }
+            borderRight: props.separator,
+          },
         })
       : css({}),
   (props: {hoverColor: string}) =>
     Option.isDefined(props.hoverColor)
       ? css({
           "&:hover": {
-            backgroundColor: props.hoverColor
-          }
+            backgroundColor: props.hoverColor,
+          },
         })
       : css({})
 ).withDefaults({label: "row"})
@@ -93,22 +93,22 @@ export const Col = styled(
   Flex,
   {direction: "column"},
   (props: {scroll: boolean}): Overflow => ({
-    overflowY: props.scroll ? "auto" : "visible"
+    overflowY: props.scroll ? "auto" : "visible",
   }),
   (props: {gap: number | string}) =>
     Option.isDefined(props.gap)
       ? css({
           "& > *:not(:last-child)": {
-            marginBottom: numToPx(props.gap)
-          }
+            marginBottom: numToPx(props.gap),
+          },
         })
       : css({}),
   (props: {separator: string}) =>
     Option.isDefined(props.separator)
       ? css({
           "& > :not(:last-child)": {
-            borderBottom: props.separator
-          }
+            borderBottom: props.separator,
+          },
         })
       : css({})
 ).withDefaults({label: "col"})

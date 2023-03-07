@@ -20,6 +20,6 @@ export default styled((props: Position) =>
     top: numToPx(props.top),
     bottom: numToPx(props.bottom),
     left: numToPx(props.left),
-    right: numToPx(props.right)
+    right: numToPx(props.right),
   })
 )

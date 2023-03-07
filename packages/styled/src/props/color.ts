@@ -8,6 +8,6 @@ export interface Color {
 export default styled(({color, bg}: Color) =>
   css({
     color,
-    backgroundColor: bg
+    backgroundColor: bg,
   })
 )

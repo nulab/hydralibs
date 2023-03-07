@@ -19,6 +19,6 @@ export default styled((props: Font) =>
     textAlign: props.textAlign,
     fontWeight: props.bold ? "bold" : undefined,
     fontStyle: props.italic ? "italic" : undefined,
-    whiteSpace: props.whiteSpace
+    whiteSpace: props.whiteSpace,
   })
 )

@@ -31,8 +31,7 @@
     "baseUrl": ".",
     "types": ["node", "mocha"]
   },
-  "include": ["packages/**/*"],
-  "exclude": ["node_modules/**/*", "packages/**/*.test.ts"],
+  "exclude": ["node_modules/**/*"],
   "compileOnSave": false,
   "vscode": {
     "rewriteTsconfig": true

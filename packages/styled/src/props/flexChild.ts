@@ -16,6 +16,6 @@ export default styled(({order, alignSelf, grow, shrink, basis}: FlexChild) =>
     alignSelf,
     flexGrow: grow,
     flexShrink: shrink,
-    flexBasis: numToPx(basis)
+    flexBasis: numToPx(basis),
   })
 )

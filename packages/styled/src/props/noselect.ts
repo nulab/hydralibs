@@ -12,7 +12,7 @@ export default styled(({noselect}: NoSelect) =>
         "-khtml-user-select": "none",
         "-moz-user-select": "none",
         "-ms-user-select": "none",
-        "user-select": "none"
+        "user-select": "none",
       })
     : css({})
 )
