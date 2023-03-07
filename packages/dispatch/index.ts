@@ -31,10 +31,10 @@ export const defer = (f: () => void): Promise<void> =>
  *
  */
 
-export const DISPATCH_SYMBOL = Symbol("Dispatch")
+export const DispatchSymbol = Symbol("Dispatch")
 
 export type Dispatch<S> = ((update: Update<S>, opts?: DispatchOpts) => void) & {
-  [DISPATCH_SYMBOL]: boolean
+  [DispatchSymbol]: boolean
 }
 
 export interface Dispatcher<S> {
@@ -72,10 +72,10 @@ export const isObservable = <S>(
 ): cont is Observable<F1<S, S>> => !!(cont as any).subscribe
 
 export const isDispatch = <S>(obj: any): obj is Dispatch<S> =>
-  !!obj[DISPATCH_SYMBOL]
+  !!obj[DispatchSymbol]
 
 export const nullDispatch = ((_: UpdateFn<any>) => {}) as Dispatch<any>
-nullDispatch[DISPATCH_SYMBOL] = true
+nullDispatch[DispatchSymbol] = true
 
 export interface GetAndSet<S, S1> {
   get: Get<S, S1>
@@ -124,7 +124,7 @@ export const childDispatchFromLens = <S, S1>(
       parentDispatch(mapUpdateTo(lens)(update), optsParam)
     }
   }) as any as Dispatch<S1>
-  dispatch[DISPATCH_SYMBOL] = true
+  dispatch[DispatchSymbol] = true
   return dispatch
 }
 

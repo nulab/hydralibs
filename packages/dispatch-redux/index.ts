@@ -2,7 +2,7 @@ import {
   Update,
   isPromise,
   Dispatch,
-  DISPATCH_SYMBOL,
+  DispatchSymbol,
   DispatchOpts,
   AsyncCallTracker,
   asyncCallTracker,
@@ -121,6 +121,6 @@ export const dispatcherFromRedux = <S>(
       reduxDispatch(action as any)
     }
   }) as Dispatch<S>
-  dispatch[DISPATCH_SYMBOL] = true
+  dispatch[DispatchSymbol] = true
   return dispatch
 }

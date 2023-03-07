@@ -2,7 +2,7 @@ import {
   isPromise,
   isObservable,
   Dispatch,
-  DISPATCH_SYMBOL,
+  DispatchSymbol,
   DispatchOpts,
   asyncCallTracker,
   Update,
@@ -89,7 +89,7 @@ export const dispatcherFromReact = <S>(
       )
     }
   }) as Dispatch<S>
-  dispatch[DISPATCH_SYMBOL] = true
+  dispatch[DispatchSymbol] = true
   return dispatch
 }
 
