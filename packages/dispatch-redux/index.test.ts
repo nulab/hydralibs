@@ -1,4 +1,3 @@
-import {List} from "functools-ts"
 import {createStore, compose, Store, applyMiddleware} from "redux"
 import thunk from "redux-thunk"
 import {updateStateReducer, dispatcherFromRedux} from "./index"
@@ -18,7 +17,7 @@ const Book = (id: number, name: string, description: string = ""): Book => ({
 })
 
 interface Data {
-  books: List<Book>
+  books: Book[]
 }
 
 const setupStore = (initialState: Data): Store<Data> =>
