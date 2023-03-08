@@ -1,7 +1,4 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "typings/fastextend.d.ts", "typings/react-html-attributes.d.ts"],
+  "extends": "tsconfig/eslint.json",
+  "include": ["src"],
 }

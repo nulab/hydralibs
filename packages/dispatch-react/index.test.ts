@@ -1,4 +1,3 @@
-import {List} from "functools-ts"
 import {mockSetState, dispatcherFromReact} from "./index"
 import {expect} from "chai"
 import {transitions, takeLatest} from "hydra-dispatch"
@@ -16,7 +15,7 @@ const newBook = (id: number, name: string, description: string = ""): Book => ({
 })
 
 interface Data {
-  books: List<Book>
+  books: Book[]
 }
 const data: Data = {
   books: [],

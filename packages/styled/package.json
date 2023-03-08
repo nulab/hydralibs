@@ -33,6 +33,7 @@
     "jest-environment-jsdom": "^29.4.3",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
+    "tsconfig": "*",
     "typescript": "^4.9.5"
   }
 }
