@@ -22,9 +22,7 @@ module.exports = {
   },
   extends: ["plugin:prettier/recommended"],
   plugins: [
-    "eslint-plugin-jsdoc",
     "@typescript-eslint",
-    "@typescript-eslint/tslint",
   ],
   root: true,
   rules: {
@@ -101,9 +99,6 @@ module.exports = {
       "undefined",
     ],
     "id-match": "error",
-    "jsdoc/check-alignment": "error",
-    "jsdoc/check-indentation": "error",
-    "jsdoc/newline-after-description": "error",
     "no-caller": "error",
     "no-console": [
       "error",
