@@ -1,0 +1,17 @@
+name: 'Pull Request Notification'
+on:
+  pull_request:
+    types: [opened]    
+
+jobs:
+  notify-opened:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify to Typetalk
+        uses: shomatan/typetalk-action@master
+        env:
+          TYPETALK_TOKEN: ${{ secrets.TYPETALK_TOKEN }}
+        with:
+          topic-id: 288578
+          message: "A pull request is created on hydralibs\n${{ github.event.repository.url }}"
+    
