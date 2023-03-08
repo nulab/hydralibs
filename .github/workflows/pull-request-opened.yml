@@ -13,5 +13,4 @@ jobs:
           TYPETALK_TOKEN: ${{ secrets.TYPETALK_TOKEN }}
         with:
           topic-id: 288578
-          message: "A pull request is created on hydralibs\n${{ github.event.repository.url }}"
-    
+          message: "A pull request is opened at hydralibs: ${{ github.event.pull_request.title }}\n${{ github.event.repository.url }}/pull/${{ github.event.pull_request.id }}"
