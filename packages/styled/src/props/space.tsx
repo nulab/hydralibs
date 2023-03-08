@@ -42,7 +42,7 @@ const marginToCss = (props: Margin) =>
       ml: (val: Val) => ({marginLeft: numToPx(val)}),
       mr: (val: Val) => ({marginRight: numToPx(val)}),
       mt: (val: Val) => ({marginTop: numToPx(val)}),
-      mb: (val: Val) => ({marginBottom: numToPx(val)})
+      mb: (val: Val) => ({marginBottom: numToPx(val)}),
     },
     "m",
     "mx",
@@ -60,16 +60,16 @@ const paddingToCss = (props: Padding) =>
       p: (val: Val) => ({padding: numToPx(val)}),
       px: (val: Val) => ({
         paddingLeft: numToPx(val),
-        paddingRight: numToPx(val)
+        paddingRight: numToPx(val),
       }),
       py: (val: Val) => ({
         paddingTop: numToPx(val),
-        paddingBottom: numToPx(val)
+        paddingBottom: numToPx(val),
       }),
       pl: (val: Val) => ({paddingLeft: numToPx(val)}),
       pr: (val: Val) => ({paddingRight: numToPx(val)}),
       pt: (val: Val) => ({paddingTop: numToPx(val)}),
-      pb: (val: Val) => ({paddingBottom: numToPx(val)})
+      pb: (val: Val) => ({paddingBottom: numToPx(val)}),
     },
     "p",
     "px",
@@ -83,6 +83,6 @@ const paddingToCss = (props: Padding) =>
 export default styled((props: Space) =>
   css({
     ...marginToCss(props),
-    ...paddingToCss(props)
+    ...paddingToCss(props),
   })
 )

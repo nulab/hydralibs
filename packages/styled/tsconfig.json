@@ -1,8 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "tsconfig/base.json",
   "compilerOptions": {
     "types": ["jest"],
     "allowJs": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "typings/fastextend.d.ts", "typings/react-html-attributes.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "typings"],
+  "exclude": ["src/**/*.test.ts"]
 }

@@ -1,6 +1,7 @@
 node_modules
 dist
-.vscode
+.vscode/*
+!.vscode/settings.json
 .idea/
 lerna-debug.log
 lib

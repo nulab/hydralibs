@@ -41,12 +41,11 @@ npm install hydra-styled@0.2.8
 
 # Development
 
-We use lerna for managing multiple project in one project
+We use turborepo for managing multiple project in one project
 If you are doing development you will need to do first
 
 ```sh
 npm install
-npx lerna bootstrap
 ```
 
 Then you can develop freely in the packages

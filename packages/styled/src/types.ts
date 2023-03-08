@@ -24,7 +24,7 @@ export interface DeepArrayI<T> extends Array<T | DeepArrayI<T>> {}
 export type DeepArray<T> = T | DeepArrayI<T>
 export type JSXChildren = DeepArray<JSXChild>
 
-export const DefaultTag = "div"
+export const DEFAULT_TAG = "div"
 
 export type PseudoProp =
   | "$active"
@@ -58,9 +58,9 @@ export interface BoxedCSSObject {
   __type: "BoxedCSSObject"
   __css: CSSObject
 }
-export const BoxedCSSObject = (css: CSSObject): BoxedCSSObject => ({
+export const boxedCSSObject = (css: CSSObject): BoxedCSSObject => ({
   __type: "BoxedCSSObject",
-  __css: css
+  __css: css,
 })
 export const isBoxedCss = (obj: any): obj is BoxedCSSObject =>
   obj && obj.__type && obj.__type === "BoxedCSSObject"

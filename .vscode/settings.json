@@ -1,0 +1,8 @@
+{
+  "eslint.workingDirectories": [
+    "./packages/dispatch",
+    "./packages/dispatch-react",
+    "./packages/dispatch-redux",
+    "./packages/styled",
+  ]
+}

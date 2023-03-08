@@ -10,21 +10,23 @@ interface OptimizedStyled {
   defaults: {}
 }
 
-export const optimize = <T extends Tag = DefaultTag>(styles: Styles<T>): OptimizedStyled => {
+export const optimize = <T extends Tag = DefaultTag>(
+  styles: Styles<T>
+): OptimizedStyled => {
   const optimizedStyled: OptimizedStyled = {
     styles: [],
-    defaults: {}
+    defaults: {},
   }
   const reversedStyles = reverse([...styles])
   return reversedStyles.reduce((acc, style) => {
     if (isStyledComponent(style))
       return {
         defaults: merge(acc.defaults, style.__defaults),
-        styles: [...acc.styles, ...style.__styles]
+        styles: [...acc.styles, ...style.__styles],
       }
     return {
       defaults: acc.defaults,
-      styles: [...acc.styles, style]
+      styles: [...acc.styles, style],
     }
   }, optimizedStyled)
 }

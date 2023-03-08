@@ -14,7 +14,7 @@ const compute = (styles: any[], tagProps: any = {}) => {
 describe("core/styled", () => {
   it("handles plain css", () => {
     expect(compute([css({backgroundColor: "blue"})])).toEqual({
-      backgroundColor: "blue"
+      backgroundColor: "blue",
     })
   })
 
@@ -22,11 +22,11 @@ describe("core/styled", () => {
     expect(
       compute([
         css({width: "100px"}),
-        (_: {}) => css({backgroundColor: "blue"})
+        (_: {}) => css({backgroundColor: "blue"}),
       ])
     ).toEqual({
       width: "100px",
-      backgroundColor: "blue"
+      backgroundColor: "blue",
     })
   })
 
@@ -35,11 +35,11 @@ describe("core/styled", () => {
       compute([
         (props: any) => css({backgroundColor: props.bg}),
         {
-          bg: "blue"
-        }
+          bg: "blue",
+        },
       ])
     ).toEqual({
-      backgroundColor: "blue"
+      backgroundColor: "blue",
     })
   })
 
@@ -49,11 +49,11 @@ describe("core/styled", () => {
         (props: any) => css({backgroundColor: props.bg}),
         {
           bg: "blue",
-          col: "red"
-        }
+          col: "red",
+        },
       ])
     ).toEqual({
-      backgroundColor: "blue"
+      backgroundColor: "blue",
     })
   })
 
@@ -63,12 +63,12 @@ describe("core/styled", () => {
         (props: any) => css({backgroundColor: props.bg}),
         {
           bg: "blue",
-          col: "red"
+          col: "red",
         },
-        (props: any) => css({color: props.col})
+        (props: any) => css({color: props.col}),
       ])
     ).toEqual({
-      backgroundColor: "blue"
+      backgroundColor: "blue",
     })
   })
 
@@ -77,11 +77,11 @@ describe("core/styled", () => {
       compute([
         (props: any) => css({backgroundColor: props.bg}),
         {
-          $hover: {bg: "green"}
-        }
+          $hover: {bg: "green"},
+        },
       ])
     ).toEqual({
-      "&:hover": {backgroundColor: "green"}
+      "&:hover": {backgroundColor: "green"},
     })
   })
 
@@ -90,11 +90,11 @@ describe("core/styled", () => {
       compute([
         (props: any) => css({backgroundColor: props.bg, color: props.col}),
         {
-          $hover: {bg: "green", col: "blue"}
-        }
+          $hover: {bg: "green", col: "blue"},
+        },
       ])
     ).toEqual({
-      "&:hover": {backgroundColor: "green", color: "blue"}
+      "&:hover": {backgroundColor: "green", color: "blue"},
     })
   })
 
@@ -103,12 +103,12 @@ describe("core/styled", () => {
       compute([
         (props: any) => css({backgroundColor: props.bg}),
         {
-          $hover: {bg: "green", col: "blue"}
+          $hover: {bg: "green", col: "blue"},
         },
-        (props: any) => css({color: props.col})
+        (props: any) => css({color: props.col}),
       ])
     ).toEqual({
-      "&:hover": {backgroundColor: "green"}
+      "&:hover": {backgroundColor: "green"},
     })
   })
 
@@ -117,13 +117,13 @@ describe("core/styled", () => {
       compute([
         (props: any) => css({backgroundColor: props.bg}),
         {
-          $hover: {$after: {bg: "green"}}
-        }
+          $hover: {$after: {bg: "green"}},
+        },
       ])
     ).toEqual({
       "&:hover": {
-        "&:after": {backgroundColor: "green"}
-      }
+        "&:after": {backgroundColor: "green"},
+      },
     })
   })
 
@@ -134,15 +134,15 @@ describe("core/styled", () => {
         (props: any) => ({bg: props.bag}),
         {
           bag: "blue",
-          $hover: {bag: "yellow", $after: {bag: "green"}}
-        }
+          $hover: {bag: "yellow", $after: {bag: "green"}},
+        },
       ])
     ).toEqual({
       backgroundColor: "blue",
       "&:hover": {
         backgroundColor: "yellow",
-        "&:after": {backgroundColor: "green"}
-      }
+        "&:after": {backgroundColor: "green"},
+      },
     })
   })
 
@@ -151,10 +151,10 @@ describe("core/styled", () => {
       compute([
         (props: any) => css({backgroundColor: props.bg}),
         {bg: "green"},
-        {bg: "blue"}
+        {bg: "blue"},
       ])
     ).toEqual({
-      backgroundColor: "blue"
+      backgroundColor: "blue",
     })
   })
 
@@ -163,16 +163,16 @@ describe("core/styled", () => {
       compute([
         (props: any) => css({backgroundColor: props.bg}),
         {
-          $hover: {$after: {bg: "green"}}
+          $hover: {$after: {bg: "green"}},
         },
         {
-          $hover: {$after: {bg: "blue"}}
-        }
+          $hover: {$after: {bg: "blue"}},
+        },
       ])
     ).toEqual({
       "&:hover": {
-        "&:after": {backgroundColor: "blue"}
-      }
+        "&:after": {backgroundColor: "blue"},
+      },
     })
   })
 
@@ -186,27 +186,27 @@ describe("core/styled", () => {
             undefinedProp: "this should be excluded",
             $after: {
               radius: "this should be excluded",
-              bg: "green"
-            }
-          }
+              bg: "green",
+            },
+          },
         },
         (props: any) => css({borderRadius: numToPx(props.radius)}),
         {
           radius: 10,
-          $hover: {$after: {bg: "blue"}, radius: 3}
+          $hover: {$after: {bg: "blue"}, radius: 3},
         },
         {
-          $hover: {radius: 5}
-        }
+          $hover: {radius: 5},
+        },
       ])
     ).toEqual({
       borderRadius: "10px",
       "&:hover": {
         borderRadius: "5px",
         "&:after": {
-          backgroundColor: "blue"
-        }
-      }
+          backgroundColor: "blue",
+        },
+      },
     })
   })
 
@@ -222,8 +222,8 @@ describe("core/styled", () => {
             direction: (val: FlexProps["direction"]) => ({flexDirection: val}),
             alignItems: (val: FlexProps["alignItems"]) => ({alignItems: val}),
             justifyContent: (val: FlexProps["justifyContent"]) => ({
-              justifyContent: val
-            })
+              justifyContent: val,
+            }),
           })
         )
     )
@@ -231,7 +231,7 @@ describe("core/styled", () => {
       Flex,
       {direction: "row"},
       (props: {scroll: boolean}): Overflow => ({
-        overflowX: props.scroll ? "auto" : "visible"
+        overflowX: props.scroll ? "auto" : "visible",
       })
     )
     const cssObj = computeStyles(Row.__styles, {scroll: true}, {})
@@ -239,7 +239,7 @@ describe("core/styled", () => {
       display: "flex",
       flexDirection: "row",
       flexShrink: 0,
-      overflowX: "auto"
+      overflowX: "auto",
     })
   })
 })

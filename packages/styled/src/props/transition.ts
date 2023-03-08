@@ -18,6 +18,6 @@ export default styled((props: Transition) =>
     transitionProperty: props.transitionProperty,
     transitionDelay: numToMs(props.transitionDelay),
     transitionDuration: numToMs(props.transitionTime),
-    transitionTimingFunction: props.transitionFunc
+    transitionTimingFunction: props.transitionFunc,
   })
 ).withDefaults({transitionTime: 200})

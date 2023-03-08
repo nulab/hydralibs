@@ -10,6 +10,6 @@ export interface Radius {
 
 export default styled(({radius}: Radius) =>
   css({
-    borderRadius: numToPx(radius)
+    borderRadius: numToPx(radius),
   })
 )

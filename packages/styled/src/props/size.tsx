@@ -28,8 +28,8 @@ const toCss = (props: Props) =>
         maxHeight: (val: Val) => ({maxHeight: numToPx(val)}),
         size: (val: Val) => ({
           width: numToPx(val),
-          height: numToPx(val)
-        })
+          height: numToPx(val),
+        }),
       },
       "size"
     )

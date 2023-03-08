@@ -4,19 +4,19 @@
   "scripts": {
     "build": "turbo build",
     "check": "npm run build && npm run lint && npm test",
-    "lint": "tslint -c tslint.json 'packages/dispatch/*.ts' 'packages/dispatch-react/*.ts' 'packages/dispatch-redux/*.ts' 'packages/dispatch-styled/src/*.ts'",
-    "format": "prettier --write \"**/*.{ts*(x),js*(on),scss}\"",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
     "test": "turbo test"
   },
   "devDependencies": {
     "husky": "^8.0.3",
-    "prettier": "^1.19.1",
-    "tslint": "^5.20.1",
-    "tslint-eslint-rules": "^4.1.1",
-    "turbo": "^1.8.3",
-    "typescript": "^3.9.10"
+    "turbo": "^1.8.3"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "engines": {
+    "node": ">=16",
+    "npm": ">=8"
+  }
 }

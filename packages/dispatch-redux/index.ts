@@ -1,38 +1,49 @@
-import {Update, isPromise, Dispatch, DispatchSymbol, DispatchOpts, AsyncCallTracker, asyncCallTracker, UpdateFn, isTransitions, Transitions} from "hydra-dispatch"
+import {
+  Update,
+  isPromise,
+  Dispatch,
+  DispatchSymbol,
+  DispatchOpts,
+  AsyncCallTracker,
+  asyncCallTracker,
+  UpdateFn,
+  isTransitions,
+  Transitions,
+} from "hydra-dispatch"
 import {Action, Dispatch as ReduxDispatch} from "redux"
 import {isObservable} from "rxjs"
 
 export type SetStateType = "SetState"
-export const SetStateType: SetStateType = "SetState"
+export const SET_STATE_TYPE: SetStateType = "SetState"
 export interface SetState<S> {
   noReplay?: boolean
-  state: S,
+  state: S
   kind: SetStateType
   type: string
 }
-const SetState = <S>(
+const setState = <S>(
   state: S,
   type: string = "SetState",
   noReplay?: boolean
 ): SetState<S> => ({
   state,
-  kind: SetStateType,
+  kind: SET_STATE_TYPE,
   noReplay,
-  type
+  type,
 })
 export type GotErrorType = "GotError"
-export const GotErrorType: GotErrorType = "GotError"
+export const GOT_ERROR_TYPE: GotErrorType = "GotError"
 export interface GotError {
   error: Error
   type: GotErrorType
 }
-const GotError = (error: Error): GotError => ({
+const gotError = (error: Error): GotError => ({
   error,
-  type: GotErrorType
+  type: GOT_ERROR_TYPE,
 })
 
 export const isSetState = <S>(action: any): action is SetState<S> =>
-  action.kind && action.kind === SetStateType
+  action.kind && action.kind === SET_STATE_TYPE
 
 export const updateStateReducer = <S, A extends Action>(
   state: S,
@@ -42,44 +53,50 @@ export const updateStateReducer = <S, A extends Action>(
   return state
 }
 
-const Schedule = <S>(
-  update: UpdateFn<S>,
-  tracker: AsyncCallTracker,
-  opts: DispatchOpts,
-  nextQueue: Transitions<S>
-) => (dispatch: ReduxDispatch, getState: () => S) => {
-  const state = getState()
-  try {
-    const cont = update(state)
-    if (isPromise(cont)) {
-      if (opts.tag && opts.takeLatest) {
-        const timestamp = tracker.record(opts.tag)
-        cont.then(pupdate => {
-          const latestRecorded = tracker.latestTimestampRecorded(opts.tag!)
-          if (latestRecorded === timestamp)
-            dispatch(Schedule(pupdate, tracker, opts, nextQueue) as any)
-        })
+const schedule =
+  <S>(
+    update: UpdateFn<S>,
+    tracker: AsyncCallTracker,
+    opts: DispatchOpts,
+    nextQueue: Transitions<S>
+  ) =>
+  (dispatch: ReduxDispatch, getState: () => S) => {
+    const state = getState()
+    try {
+      const cont = update(state)
+      if (isPromise(cont)) {
+        if (opts.tag && opts.takeLatest) {
+          const timestamp = tracker.record(opts.tag)
+          cont.then((pupdate) => {
+            const latestRecorded = tracker.latestTimestampRecorded(opts.tag!)
+            if (latestRecorded === timestamp)
+              dispatch(schedule(pupdate, tracker, opts, nextQueue) as any)
+          })
+        } else {
+          cont
+            .then((pupdate) =>
+              dispatch(schedule(pupdate, tracker, opts, nextQueue) as any)
+            )
+            .catch((err) => dispatch(gotError(err)))
+        }
+      } else if (isObservable(cont)) {
+        cont.subscribe(
+          (pupdate) =>
+            dispatch(schedule(pupdate, tracker, opts, nextQueue) as any),
+          (err) => dispatch(gotError(err))
+        )
       } else {
-        cont
-          .then(pupdate => dispatch(Schedule(pupdate, tracker, opts, nextQueue) as any))
-          .catch(err => dispatch(GotError(err)))
+        dispatch(setState(cont, opts.tag, opts.noReplay))
+        if (nextQueue.length !== 0) {
+          dispatch(
+            schedule(nextQueue[0], tracker, opts, nextQueue.slice(1)) as any
+          )
+        }
       }
-    } else if (isObservable(cont)) {
-      cont.subscribe(
-        pupdate => dispatch(Schedule(pupdate, tracker, opts, nextQueue) as any),
-        err => dispatch(GotError(err))
-      )
-    } else {
-      dispatch(SetState(cont, opts.tag, opts.noReplay))
-      if (nextQueue.length !== 0) {
-        dispatch(Schedule(nextQueue[0], tracker, opts, nextQueue.slice(1)) as any)
-      }
-
+    } catch (err) {
+      dispatch(gotError(err))
     }
-  } catch (err) {
-    dispatch(GotError(err))
   }
-}
 
 export const dispatcherFromRedux = <S>(
   reduxDispatch: ReduxDispatch
@@ -87,16 +104,20 @@ export const dispatcherFromRedux = <S>(
   let tracker = asyncCallTracker()
   let dispatch = ((update: Update<S>, opts?: DispatchOpts) => {
     const dispatchOpts = {
-      tag: opts && opts.tag || update.tag || "SetState",
-      noReplay: opts && opts.noReplay || update.noReplay || false,
-      takeLatest: (opts && opts.takeLatest && opts.tag) || (update.takeLatest && update.tag) ? true : false
+      tag: (opts && opts.tag) || update.tag || "SetState",
+      noReplay: (opts && opts.noReplay) || update.noReplay || false,
+      takeLatest:
+        (opts && opts.takeLatest && opts.tag) ||
+        (update.takeLatest && update.tag)
+          ? true
+          : false,
     }
     if (isTransitions(update)) {
       const nextQueue = update.slice(1)
-      const action = Schedule(update[0], tracker, dispatchOpts, nextQueue)
+      const action = schedule(update[0], tracker, dispatchOpts, nextQueue)
       reduxDispatch(action as any)
     } else {
-      const action = Schedule(update, tracker, dispatchOpts, [])
+      const action = schedule(update, tracker, dispatchOpts, [])
       reduxDispatch(action as any)
     }
   }) as Dispatch<S>

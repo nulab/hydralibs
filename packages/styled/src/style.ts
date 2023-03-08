@@ -1,4 +1,4 @@
-import {StyledArg, DefaultTag, isBoxedCss, BoxedCSSObject} from "./types"
+import {StyledArg, DefaultTag, isBoxedCss, boxedCSSObject} from "./types"
 import {List, F1, Option} from "functools-ts"
 import isFunction from "lodash-es/isFunction"
 import {CSSObject} from "@emotion/core"
@@ -32,20 +32,17 @@ export const fastPick = <A extends {}>(
   return filteredObj
 }
 
-export const cssStyle = <P extends {}>(
-  ...keys: (keyof P)[]
-): F1<P, CSSInterpolation<any>> => (props: P) =>
-  BoxedCSSObject(fastPick(props, ...keys) as any)
+export const cssStyle =
+  <P extends {}>(...keys: (keyof P)[]): F1<P, CSSInterpolation<any>> =>
+  (props: P) =>
+    boxedCSSObject(fastPick(props, ...keys) as any)
 
 const filterTagProps = (props: any): any =>
-  Object.keys(props).reduce(
-    (acc, key) => {
-      if (key !== "children" && typeof props[key] !== "function")
-        acc[key] = props[key]
-      return acc
-    },
-    {} as any
-  )
+  Object.keys(props).reduce((acc, key) => {
+    if (key !== "children" && typeof props[key] !== "function")
+      acc[key] = props[key]
+    return acc
+  }, {} as any)
 
 export const computeCssOnly = (
   styles: List<StyledArg<{}, {}, DefaultTag>>,
@@ -115,10 +112,10 @@ interface PropsAndCss {
   props: any
   css: CSSObject
 }
-const PropsAndCss = (props: any, css: CSSObject = {}): PropsAndCss => ({
+const propsAndCss = (props: any, css: CSSObject = {}): PropsAndCss => ({
   type: "PropsAndCss",
   props,
-  css
+  css,
 })
 
 const isPropsAndCss = (obj: any): obj is PropsAndCss =>
@@ -127,11 +124,11 @@ const isPropsAndCss = (obj: any): obj is PropsAndCss =>
 const transformProps = (styleFn: any, props: any): PropsAndCss => {
   const styleFnResult = styleFn(props)
   const transformedProps = isBoxedCss(styleFnResult)
-    ? BoxedCSSObject(omitEmptyValues(styleFnResult.__css))
+    ? boxedCSSObject(omitEmptyValues(styleFnResult.__css))
     : omitEmptyValues(styleFnResult)
   const result: PropsAndCss = isBoxedCss(transformedProps)
-    ? PropsAndCss({}, transformedProps.__css)
-    : PropsAndCss(fastextend.merge({}, props, transformedProps))
+    ? propsAndCss({}, transformedProps.__css)
+    : propsAndCss(fastextend.merge({}, props, transformedProps))
   for (let propName in props) {
     if (propName[0] === "$") {
       const pseudoProp = props[propName]
@@ -142,7 +139,7 @@ const transformProps = (styleFn: any, props: any): PropsAndCss => {
         )
         result.props[propName] = fastextend.merge(
           transformedPseudoProp,
-          isPropsAndCss(pseudoProp) ? pseudoProp : PropsAndCss(pseudoProp)
+          isPropsAndCss(pseudoProp) ? pseudoProp : propsAndCss(pseudoProp)
         )
       }
     }
@@ -163,7 +160,7 @@ const pseudoPropsToCss = (props: any): CSSObject => {
   return cssObj
 }
 
-export const responsive = function<T>(
+export const responsive = function <T>(
   props: T,
   mappers: {[P in keyof T]: (val: T[P]) => CSSObject},
   ...precedence: (keyof T)[]
@@ -185,7 +182,7 @@ export const responsive = function<T>(
   )
 }
 
-const withMediaQueries = function<T>(val: T | T[], fn: (val: T) => CSSObject) {
+const withMediaQueries = function <T>(val: T | T[], fn: (val: T) => CSSObject) {
   if (Array.isArray(val)) {
     const vals = val.slice()
     while (vals.length < 3) {
@@ -194,7 +191,7 @@ const withMediaQueries = function<T>(val: T | T[], fn: (val: T) => CSSObject) {
     return {
       "@media (max-width:480px)": fn(vals[0]),
       "@media (min-width:480px)": fn(vals[1]),
-      "@media (min-width:992px)": fn(vals[2])
+      "@media (min-width:992px)": fn(vals[2]),
     }
   } else {
     return fn(val)
