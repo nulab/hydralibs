@@ -48,7 +48,11 @@ If you are doing development you will need to do first
 npm install
 ```
 
-Then you can develop freely in the packages
+## Build
+
+```sh
+npm run build
+```
 
 # Contributions
 
