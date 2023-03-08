@@ -93,7 +93,7 @@ export const dispatcherFromReact = <S>(
   return dispatch
 }
 
-export interface MockStore<S> {
+interface MockStore<S> {
   state: S
   setState: (newState: F1<S, S> | S) => void
 }

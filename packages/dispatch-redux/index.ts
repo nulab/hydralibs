@@ -13,9 +13,9 @@ import {
 import {Action, Dispatch as ReduxDispatch} from "redux"
 import {isObservable} from "rxjs"
 
-export type SetStateType = "SetState"
-export const SET_STATE_TYPE: SetStateType = "SetState"
-export interface SetState<S> {
+type SetStateType = "SetState"
+const SET_STATE_TYPE: SetStateType = "SetState"
+interface SetState<S> {
   noReplay?: boolean
   state: S
   kind: SetStateType
@@ -31,9 +31,9 @@ const setState = <S>(
   noReplay,
   type,
 })
-export type GotErrorType = "GotError"
-export const GOT_ERROR_TYPE: GotErrorType = "GotError"
-export interface GotError {
+type GotErrorType = "GotError"
+const GOT_ERROR_TYPE: GotErrorType = "GotError"
+interface GotError {
   error: Error
   type: GotErrorType
 }
@@ -42,7 +42,7 @@ const gotError = (error: Error): GotError => ({
   type: GOT_ERROR_TYPE,
 })
 
-export const isSetState = <S>(action: any): action is SetState<S> =>
+const isSetState = <S>(action: any): action is SetState<S> =>
   action.kind && action.kind === SET_STATE_TYPE
 
 export const updateStateReducer = <S, A extends Action>(
