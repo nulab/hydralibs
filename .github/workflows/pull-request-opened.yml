@@ -13,4 +13,4 @@ jobs:
           TYPETALK_TOKEN: ${{ secrets.TYPETALK_TOKEN }}
         with:
           topic-id: ${{ secrets.TYPETALK_TOPIC_ID }}
-          message: "A pull request for `hydralibs` is opened\n> ${{ github.event.pull_request.title }}\n${{ github.event.pull_request.html_url }}"
+          message: "A pull request for `hydralibs` is opened: ${{ github.event.pull_request.html_url }}\n> ${{ github.event.pull_request.title }}"
